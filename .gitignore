@@ -1,0 +1,27 @@
+# Visual Studio local files
+/.vs/
+*.user
+
+# Build products
+obj/
+bin/
+/.nuget/
+/dist/
+/test/Test.props
+
+# Temporary files
+*.log
+*.old
+*.tmp
+
+# Git junk
+*.orig
+*.patch
+*.rej
+
+# Windows junk
+Thumbs.db
+Desktop.ini
+
+# macOS junk
+.DS_Store

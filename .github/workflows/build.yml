@@ -1,0 +1,52 @@
+# GitHub Actions workflow
+# https://help.github.com/en/actions/reference
+
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - release/*
+  pull_request:
+    branches:
+      - '*'
+
+env:
+  DOTNET_NOLOGO: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    steps:
+
+      - name: Check Out Code
+        uses: actions/checkout@v2 # https://github.com/actions/checkout
+        with:
+          fetch-depth: 16
+
+      - name: Configure .NET Core
+        uses: actions/setup-dotnet@v1 # https://github.com/actions/setup-dotnet
+        with:
+          dotnet-version: 3.1.x
+
+      - name: Install NuGet Packages
+        run: dotnet restore
+
+      - name: Build
+        id: build
+        run: >
+          dotnet pack
+          --configuration Release
+          -p:Branch=${{ github.ref }}
+          -p:Counter=${{ github.run_number }}
+          -p:RepositoryCommit=${{ github.sha }}
+          -p:PackageOutputPath=${{ runner.temp }}\dist
+
+      - name: Save NuGet Package
+        uses: actions/upload-artifact@v2 # https://github.com/actions/upload-artifact
+        with:
+          name: Package
+          path: ${{ runner.temp }}\dist

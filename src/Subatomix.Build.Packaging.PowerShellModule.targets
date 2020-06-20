@@ -1,0 +1,171 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Copyright (C) 2020 Subatomix Research, Inc.
+
+    Permission to use, copy, modify, and distribute this software for any
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  -->
+
+  <!--
+    This file makes 'dotnet pack' and the Pack command in Visual Studio
+    produce a PowerShell module nupkg suitable for publishing in a repository.
+
+    REFERENCES
+
+    .NET SDK targets
+    Path: C:\Program Files\dotnet\sdk\3.1.301\Sdks\Microsoft.NET.Sdk\targets
+    - Microsoft.NET.PackTool.props
+    - Microsoft.NET.PackTool.targets
+
+    NuGet pack and restore as MSBuild targets
+    https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets
+
+    Common MSBuild project properties
+    https://docs.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
+
+    MSBuild well-known item metadata
+    https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata
+
+    Item functions
+    https://docs.microsoft.com/en-us/visualstudio/msbuild/item-functions?view=vs-2019
+
+    ResolveToolPackagePaths task
+    https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/ResolveToolPackagePaths.cs
+  -->
+
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <ContentTargetFolders>.</ContentTargetFolders>
+    <DefaultModuleManifestPath Condition="'$(DefaultModuleManifestPath)' == ''">$(MSBuildProjectName).psd1</DefaultModuleManifestPath>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);ConfigurePackModule</TargetsForTfmSpecificContentInPackage>
+    <ConfigurePackModuleDependsOn>
+      ConfigurePackDepsFile;
+      ConfigurePackModuleManifest;
+      ConfigurePackPublishedFile;
+      $(ConfigurePackModuleDependsOn)
+    </ConfigurePackModuleDependsOn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU5100;NU5110;NU5111</NoWarn>
+    <!--
+      NU5100: The assembly '...' is not inside the 'lib' folder and hence it
+              won't be added as a reference when the package is installed into
+              a project. Move it into the 'lib' folder if it needs to be
+              referenced.
+
+      NU5110: The script file '...' is outside the 'tools' folder and hence
+              will not be executed during installation of this package. Move
+              it into the 'tools' folder.
+
+      NU5111: The script file '...' is not recognized by NuGet and hence will
+              not be executed during installation of this package. Rename it
+              to install.ps1, uninstall.ps1 or init.ps1 and place it directly
+              under 'tools'.
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ModuleManifest Include="$(DefaultModuleManifestPath)" Condition="Exists('$(DefaultModuleManifestPath)')" />
+    <Content Remove="@(ModuleManifest)" />
+    <None Include="@(ModuleManifest)" />
+  </ItemGroup>
+
+  <Target Name="ResolveModuleManifest">
+    <ItemGroup>
+      <ModuleManifest Condition="'%(ModuleManifest.OutputPath)' == ''">
+        <OutputPath Condition="'%(ModuleManifest.Link)' != ''">%(ModuleManifest.Link)</OutputPath>
+        <OutputPath Condition="'%(ModuleManifest.Link)' == ''">%(ModuleManifest.Identity)</OutputPath>
+      </ModuleManifest>
+      <ModuleManifest Condition="'%(ModuleManifest.PackagePath)' == ''">
+        <PackagePath>%(ModuleManifest.OutputPath)</PackagePath>
+      </ModuleManifest>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GenerateModuleManifest" DependsOnTargets="ResolveModuleManifest">
+    <WriteLinesToFile
+      File="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
+      Lines="$(
+        [System.IO.File]::ReadAllText('%(ModuleManifest.FullPath)')
+          .Replace(`{VersionPrefix}`, $(VersionPrefix))
+          .Replace(`{VersionSuffix}`, $(VersionSuffix))
+          .Replace(`{Copyright}`,     $(Copyright))
+      )"
+      Encoding="UTF-8"
+      Overwrite="true"
+      WriteOnlyWhenDifferent="true" />
+  </Target>
+
+  <Target Name="CopyModuleManifestToOutputDirectory"
+          AfterTargets="CopyFilesToOutputDirectory"
+          DependsOnTargets="GenerateModuleManifest">
+    <Copy SourceFiles="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
+          DestinationFiles="$(OutDir)%(ModuleManifest.OutputPath)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyModuleManifestToPublishDirectory"
+          AfterTargets="CopyFilesToPublishDirectory"
+          DependsOnTargets="GenerateModuleManifest">
+    <Copy SourceFiles="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
+          DestinationFiles="$(PublishDir)%(ModuleManifest.OutputPath)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="PublishForPack"
+          Condition="'$(IsPublishable)' == 'true'"
+          DependsOnTargets="$(_PublishNoBuildAlternativeDependsOn)">
+    <Message Importance="High"
+             Text="$(MSBuildProjectName) -> $([System.IO.Path]::GetFullPath('$(PublishDir)'))" />
+  </Target>
+
+  <Target Name="ConfigurePackModule"
+          DependsOnTargets="$(ConfigurePackModuleDependsOn)" />
+
+  <Target Name="ConfigurePackDepsFile" DependsOnTargets="PublishForPack">
+    <ItemGroup>
+      <_DepsFile Include="$(PublishDepsFilePath)"/>
+    </ItemGroup>
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="@(_DepsFile)">
+        <PackagePath>%(_DepsFile.Filename)%(_DepsFile.Extension)</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ConfigurePackModuleManifest" DependsOnTargets="GenerateModuleManifest">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)">
+        <PackagePath>%(ModuleManifest.PackagePath)</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ConfigurePackPublishedFile" DependsOnTargets="PublishForPack">
+    <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
+                             PublishDir="$(PublishDir)"
+                             TargetFramework="all">
+      <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
+              ItemName="_ResolvedFileToPublishWithPackagePath" />
+    </ResolveToolPackagePaths>
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="@(_ResolvedFileToPublishWithPackagePath)">
+        <!-- Remove 'tools/all/any/' prefix (length 14) -->
+        <PackagePath>$([System.String]::Copy('%(_ResolvedFileToPublishWithPackagePath.PackagePath)').Substring(14))</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+
+</Project>
