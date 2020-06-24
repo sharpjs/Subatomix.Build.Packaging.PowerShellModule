@@ -17,9 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="*.psd1" CopyToOutputDirectory="PreserveNewest" />
-    <Content Update="*.psm1" CopyToOutputDirectory="PreserveNewest" />
-    <Content Update="*.ps1"  CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
