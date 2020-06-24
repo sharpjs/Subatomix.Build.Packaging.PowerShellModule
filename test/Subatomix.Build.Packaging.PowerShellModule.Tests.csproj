@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Test/example module for Subatomix.Build.Packaging.PowerShellModule</Description>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <!-- CS1591:  Missing XML comment for publicly visible type or member -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Management.Automation" Version="7.0.2" PrivateAssets="All" />
+    <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="1.0.0-local.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="*.psd1" CopyToOutputDirectory="PreserveNewest" />
+    <Content Update="*.psm1" CopyToOutputDirectory="PreserveNewest" />
+    <Content Update="*.ps1"  CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

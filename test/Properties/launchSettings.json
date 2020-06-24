@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PS Core": {
+      "commandName": "Executable",
+      "executablePath": "pwsh",
+      "commandLineArgs": "-NoLogo -NoProfile -NoExit -Command \"Import-Module .\\Subatomix.Build.Packaging.PowerShellModule.Tests.psd1; Set-PSReadLineOption -EditMode Emacs; function prompt { 'PS> ' }\"",
+      "workingDirectory": "$(OutDir)"
+    }
+  }
+}

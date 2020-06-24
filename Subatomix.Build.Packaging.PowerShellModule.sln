@@ -6,8 +6,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = ".root", ".root.targets", "{9A40377D-90CC-45B2-85DD-9939C33E8D56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.Build.Packaging.PowerShellModule", "src\Subatomix.Build.Packaging.PowerShellModule.proj", "{21830F93-D46D-4617-B9F3-EFA8E2DA04AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.Build.Packaging.PowerShellModule.Tests", "test\Subatomix.Build.Packaging.PowerShellModule.Tests.csproj", "{3D30AE59-62F8-4BCF-A490-F07849F39AB4}"
 	ProjectSection(ProjectDependencies) = postProject
-		{9A40377D-90CC-45B2-85DD-9939C33E8D56} = {9A40377D-90CC-45B2-85DD-9939C33E8D56}
+		{21830F93-D46D-4617-B9F3-EFA8E2DA04AD} = {21830F93-D46D-4617-B9F3-EFA8E2DA04AD}
 	EndProjectSection
 EndProject
 Global
@@ -24,6 +26,10 @@ Global
 		{21830F93-D46D-4617-B9F3-EFA8E2DA04AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21830F93-D46D-4617-B9F3-EFA8E2DA04AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21830F93-D46D-4617-B9F3-EFA8E2DA04AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D30AE59-62F8-4BCF-A490-F07849F39AB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D30AE59-62F8-4BCF-A490-F07849F39AB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D30AE59-62F8-4BCF-A490-F07849F39AB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D30AE59-62F8-4BCF-A490-F07849F39AB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
