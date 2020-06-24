@@ -94,7 +94,9 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="GenerateModuleManifest" DependsOnTargets="ResolveModuleManifest">
+  <Target Name="GenerateModuleManifest"
+          DependsOnTargets="ResolveModuleManifest"
+          Condition="@(ModuleManifest->Count()) != 0">
     <WriteLinesToFile
       File="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
       Lines="$(
@@ -110,7 +112,8 @@
 
   <Target Name="CopyModuleManifestToOutputDirectory"
           AfterTargets="CopyFilesToOutputDirectory"
-          DependsOnTargets="GenerateModuleManifest">
+          DependsOnTargets="GenerateModuleManifest"
+          Condition="@(ModuleManifest->Count()) != 0">
     <Copy SourceFiles="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
           DestinationFiles="$(OutDir)%(ModuleManifest.OutputPath)"
           SkipUnchangedFiles="true" />
@@ -118,15 +121,16 @@
 
   <Target Name="CopyModuleManifestToPublishDirectory"
           AfterTargets="CopyFilesToPublishDirectory"
-          DependsOnTargets="GenerateModuleManifest">
+          DependsOnTargets="GenerateModuleManifest"
+          Condition="@(ModuleManifest->Count()) != 0">
     <Copy SourceFiles="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
           DestinationFiles="$(PublishDir)%(ModuleManifest.OutputPath)"
           SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="PublishForPack"
-          Condition="'$(IsPublishable)' == 'true'"
-          DependsOnTargets="$(_PublishNoBuildAlternativeDependsOn)">
+          DependsOnTargets="$(_PublishNoBuildAlternativeDependsOn)"
+          Condition="'$(IsPublishable)' == 'true'">
     <Message Importance="High"
              Text="$(MSBuildProjectName) -> $([System.IO.Path]::GetFullPath('$(PublishDir)'))" />
   </Target>
