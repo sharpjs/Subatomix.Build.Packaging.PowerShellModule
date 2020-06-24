@@ -17,16 +17,16 @@
   -->
 
   <ItemGroup>
-    <Content Include="**\*.clixml"       Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.cdxml"        Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.dll-help.xml" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.ps1"          Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.ps1xml"       Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.psc1"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.psd1"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.psm1"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.psrc"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Content Include="**\*.pssc"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Content Include="**\*.clixml"       Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.cdxml"        Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.dll-help.xml" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.ps1"          Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.ps1xml"       Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.psc1"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.psd1"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.psm1"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.psrc"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="**\*.pssc"         Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" CopyToOutputDirectory="PreserveNewest" />
     <None Remove="**\*.clixml"       />
     <None Remove="**\*.cdxml"        />
     <None Remove="**\*.dll-help.xml" />
