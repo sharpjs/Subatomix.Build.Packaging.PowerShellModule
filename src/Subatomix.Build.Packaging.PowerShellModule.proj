@@ -46,8 +46,4 @@
     <Content Include="icon.png" PackagePath="" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\.root.targets" />
-  </ItemGroup>
-
 </Project>
