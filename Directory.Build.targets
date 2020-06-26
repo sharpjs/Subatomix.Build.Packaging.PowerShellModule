@@ -27,4 +27,10 @@
     <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
   </ItemGroup>
 
+  <Target Name="ClearCachedNugetPackage"
+          AfterTargets="Pack"
+          Condition="'$(IsPackable)' == 'true' And '$(ContinuePackingAfterGeneratingNuspec)' == 'true'">
+    <RemoveDir Directories="$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))$(PackageId)\$(PackageVersion)" ContinueOnError="true" />
+  </Target>
+
 </Project>
