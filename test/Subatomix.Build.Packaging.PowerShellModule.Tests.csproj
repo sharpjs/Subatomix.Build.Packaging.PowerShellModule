@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Test/example module for Subatomix.Build.Packaging.PowerShellModule</Description>
@@ -12,12 +12,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Management.Automation" Version="7.0.2" PrivateAssets="All" />
-    <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="1.0.0-local.*" />
+    <ProjectReference Include="..\src\Subatomix.Build.Packaging.PowerShellModule.proj">
+      <ExcludeAssets>all</ExcludeAssets>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
+    <PackageReference Include="System.Management.Automation" Version="7.0.2" PrivateAssets="All" />
+    <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="[$(Version)]" />
   </ItemGroup>
 
 </Project>

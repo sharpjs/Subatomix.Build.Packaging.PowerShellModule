@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.Build.NoTargets/1.0.110">
+﻿<Project Sdk="Microsoft.Build.NoTargets/1.0.110">
   <!-- https://github.com/microsoft/MSBuildSdks/tree/master/src/NoTargets -->
 
   <!--
@@ -23,7 +23,6 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
-    <SetGitHubActionsVersion>true</SetGitHubActionsVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -34,10 +33,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="0.0.0-pre.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <ProjectReference Include="..\.root.targets">
+      <ExcludeAssets>all</ExcludeAssets>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

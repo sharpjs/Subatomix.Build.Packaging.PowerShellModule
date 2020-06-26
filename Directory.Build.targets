@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.Build.NoTargets/1.0.110">
-  <!-- https://github.com/microsoft/MSBuildSdks/tree/master/src/NoTargets -->
+<Project>
 
   <!--
     Copyright (C) 2020 Subatomix Research, Inc.
@@ -17,20 +16,11 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   -->
 
-  <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <GenerateDependencyFile>false</GenerateDependencyFile>
-    <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
-    <IsPublishable>false</IsPublishable>
-    <IsPackable>false</IsPackable>
-    <SetGitHubActionsVersion>true</SetGitHubActionsVersion>
-  </PropertyGroup>
-
   <ItemGroup>
-    <None Include="**" Exclude="src\**;test\**;dist\**;$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
-    <None Include=".github\**" />
+    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="0.0.0-pre.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>build</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
