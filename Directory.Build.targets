@@ -23,4 +23,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
+  </ItemGroup>
+
 </Project>

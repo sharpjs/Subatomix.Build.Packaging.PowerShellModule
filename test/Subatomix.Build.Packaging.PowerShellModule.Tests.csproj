@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
     <PackageReference Include="System.Management.Automation" Version="7.0.2" PrivateAssets="All" />
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="[$(Version)]" />
   </ItemGroup>
