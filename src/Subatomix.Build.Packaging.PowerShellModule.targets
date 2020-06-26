@@ -76,10 +76,13 @@
     -->
   </PropertyGroup>
 
+  <ItemDefinitionGroup>
+    <None CopyToOutputDirectory="PreserveNewest" />
+  </ItemDefinitionGroup>
+
   <ItemGroup>
     <ModuleManifest Include="$(DefaultModuleManifestPath)" Condition="Exists('$(DefaultModuleManifestPath)')" />
-    <Content Remove="@(ModuleManifest)" />
-    <None Include="@(ModuleManifest)" />
+    <None Update="@(ModuleManifest)" CopyToOutputDirectory="Never" />
   </ItemGroup>
 
   <Target Name="ResolveModuleManifest">
