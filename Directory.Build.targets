@@ -27,10 +27,22 @@
     <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
   </ItemGroup>
 
-  <Target Name="ClearCachedNugetPackage"
-          AfterTargets="Pack"
-          Condition="'$(IsPackable)' == 'true' And '$(ContinuePackingAfterGeneratingNuspec)' == 'true'">
-    <RemoveDir Directories="$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))$(PackageId)\$(PackageVersion)" ContinueOnError="true" />
+  <Target Name="_CheckIfWillCreatePackage" BeforeTargets="GenerateNuspec"
+          Condition="'$(IsPackable)' == 'true' And '$(ContinuePackingAfterGeneratingNuspec)' == 'true'"
+          Inputs="@(NuGetPackInput)" Outputs="@(NuGetPackOutput)">
+    <!-- https://docs.microsoft.com/en-us/visualstudio/msbuild/incremental-builds#determine-whether-a-target-has-been-run -->                       
+    <CreateProperty Value="true">
+      <Output PropertyName="_WillCreatePackage" TaskParameter="ValueSetByTask" />
+    </CreateProperty>
+  </Target>
+
+  <Target Name="RemoveCachedPackage" AfterTargets="GenerateNuspec"
+          Condition="'$(_WillCreatePackage)' == 'true'">
+    <PropertyGroup>
+      <CachedPackageDir>$([MSBuild]::EnsureTrailingSlash("$(NuGetPackageRoot)"))$(PackageId)\$(PackageVersion)</CachedPackageDir>
+    </PropertyGroup>
+    <RemoveDir Directories="$(CachedPackageDir)" ContinueOnError="true" />
+    <Message Importance="high" Text="Removed cached package $(CachedPackageDir)" />
   </Target>
 
 </Project>
