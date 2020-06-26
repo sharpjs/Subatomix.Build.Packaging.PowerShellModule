@@ -39,4 +39,8 @@
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="[$(Version)]" />
   </ItemGroup>
 
+  <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
+    <Message Importance="high" Text="_PackageFiles: %(_PackageFiles.Identity)" />
+  </Target>
+
 </Project>
