@@ -11,6 +11,12 @@ indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.{*proj,sln}]
+charset = utf-8-bom
+
+[root.targets]
+charset = utf-8-bom
+
 [*.sln]
 indent_style = tab
 indent_size = 4
