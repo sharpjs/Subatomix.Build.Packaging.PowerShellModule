@@ -33,7 +33,7 @@ jobs:
           dotnet-version: 3.1.x
 
       - name: Configure NuGet
-        uses: DamianReeves/write-file-action
+        uses: DamianReeves/write-file-action@v1
         with:
           path: NuGet.config
           write-mode: overwrite
