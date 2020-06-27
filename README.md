@@ -1,6 +1,6 @@
 # Subatomix.Build.Packaging.PowerShellModule
 
-PowerShell Module packaging support for .NET
+PowerShell module packaging support for .NET
 [SDK-style](https://docs.microsoft.com/en-us/dotnet/core/tools/csproj)
 projects.
 

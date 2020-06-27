@@ -18,7 +18,7 @@
   -->
 
   <PropertyGroup>
-    <Description>PowerShell Module packaging support for .NET SDK-style projects</Description>
+    <Description>PowerShell module packaging support for .NET SDK-style projects</Description>
     <TargetFramework>netstandard1.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
