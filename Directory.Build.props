@@ -18,7 +18,6 @@
 
   <PropertyGroup>
     <Product>Subatomix.Build.Packaging.PowerShellModule</Product>
-    <Description>Pack as a PowerShell Module</Description>
     <VersionPrefix>1.0.0</VersionPrefix>
     <Authors>Jeffrey Sharp</Authors>
     <Company>Subatomix Research, Inc.</Company>

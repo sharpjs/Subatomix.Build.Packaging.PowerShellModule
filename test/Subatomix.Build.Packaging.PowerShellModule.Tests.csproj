@@ -28,6 +28,7 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
+  <!-- For build order only -->
   <ItemGroup>
     <ProjectReference Include="..\src\Subatomix.Build.Packaging.PowerShellModule.proj">
       <ExcludeAssets>all</ExcludeAssets>
@@ -44,6 +45,7 @@
     <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
   </ItemGroup>
 
+  <!-- For testing only -->
   <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
     <Message Importance="high" Text="_PackageFiles: %(_PackageFiles.Identity)" />
   </Target>
