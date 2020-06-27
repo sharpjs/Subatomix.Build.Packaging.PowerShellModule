@@ -23,10 +23,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
-  </ItemGroup>
-
   <Target Name="_CheckIfWillCreatePackage" BeforeTargets="GenerateNuspec"
           Condition="'$(IsPackable)' == 'true' And '$(ContinuePackingAfterGeneratingNuspec)' == 'true'"
           Inputs="@(NuGetPackInput)" Outputs="@(NuGetPackOutput)">

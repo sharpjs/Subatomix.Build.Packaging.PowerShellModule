@@ -40,6 +40,10 @@
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="[$(Version)]" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
+  </ItemGroup>
+
   <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
     <Message Importance="high" Text="_PackageFiles: %(_PackageFiles.Identity)" />
   </Target>

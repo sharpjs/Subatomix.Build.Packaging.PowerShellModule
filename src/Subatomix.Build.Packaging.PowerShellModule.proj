@@ -42,6 +42,7 @@
   <ItemGroup>
     <Content Include="*.props" />
     <Content Include="*.targets" />
+    <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
   </ItemGroup>
 
 </Project>
