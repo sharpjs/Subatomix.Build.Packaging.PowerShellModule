@@ -33,7 +33,6 @@ jobs:
           dotnet-version: 3.1.x
 
       - name: Build Package
-        id: build
         run: >
           dotnet pack src
           --configuration Release
@@ -43,7 +42,6 @@ jobs:
           -p:PackageOutputPath=${{ runner.temp }}\dist
 
       - name: Build Tests
-        id: build
         run: >
           dotnet pack test
           --configuration Release
