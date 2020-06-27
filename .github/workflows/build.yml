@@ -32,6 +32,21 @@ jobs:
         with:
           dotnet-version: 3.1.x
 
+      - name: Configure NuGet
+        uses: DamianReeves/write-file-action
+        with:
+          path: NuGet.config
+          write-mode: overwrite
+          contents: |
+            <?xml version="1.0" encoding="utf-8"?>
+            <configuration>
+              <packageSources>
+                <clear/>
+                <add key="Solution" value="${{ runner.temp }}\dist" />
+                <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+              </packageSources>
+            </configuration>
+
       - name: Build Package
         run: >
           dotnet pack src
