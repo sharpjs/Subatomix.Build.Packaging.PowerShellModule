@@ -25,6 +25,7 @@ jobs:
       - name: Check Out Code
         uses: actions/checkout@v2 # https://github.com/actions/checkout
         with:
+          clean: true
           fetch-depth: 16
 
       - name: Configure .NET Core
@@ -32,41 +33,24 @@ jobs:
         with:
           dotnet-version: 3.1.x
 
-      - name: Configure NuGet
-        uses: DamianReeves/write-file-action@v1.0
-        with:
-          path: NuGet.config
-          write-mode: overwrite
-          contents: |
-            <?xml version="1.0" encoding="utf-8"?>
-            <configuration>
-              <packageSources>
-                <clear/>
-                <add key="Solution" value="${{ runner.temp }}\dist" />
-                <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-              </packageSources>
-            </configuration>
-
-      - name: Build Package
+      - name: Build
         run: >
           dotnet pack src
           --configuration Release
           -p:Branch=${{ github.ref }}
           -p:Counter=${{ github.run_number }}
           -p:RepositoryCommit=${{ github.sha }}
-          -p:PackageOutputPath=${{ runner.temp }}\dist
 
-      - name: Build Tests
+      - name: Test
         run: >
           dotnet pack test
           --configuration Release
           -p:Branch=${{ github.ref }}
           -p:Counter=${{ github.run_number }}
           -p:RepositoryCommit=${{ github.sha }}
-          -p:PackageOutputPath=${{ runner.temp }}\dist
 
-      - name: Save NuGet Package
+      - name: Save Package
         uses: actions/upload-artifact@v2 # https://github.com/actions/upload-artifact
         with:
           name: Package
-          path: ${{ runner.temp }}\dist
+          path: dist
