@@ -34,13 +34,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\.root.targets">
-      <ExcludeAssets>all</ExcludeAssets>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="*.props" />
     <Content Include="*.targets" />
     <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />

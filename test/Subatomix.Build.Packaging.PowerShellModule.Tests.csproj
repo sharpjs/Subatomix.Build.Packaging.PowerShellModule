@@ -24,30 +24,23 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- CS1591:  Missing XML comment for publicly visible type or member -->
+    <!-- CS1591: Missing XML comment for publicly visible type or member -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
-  <!-- For build order only -->
-  <ItemGroup>
-    <ProjectReference Include="..\src\Subatomix.Build.Packaging.PowerShellModule.proj">
-      <ExcludeAssets>all</ExcludeAssets>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Management.Automation" Version="7.0.2" PrivateAssets="All" />
-    <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="[$(PackageVersion)]" />
   </ItemGroup>
+
+  <!--
+    This PackageReference is simulated via direct import in Directory.Build.targets:
+    <ItemGroup>
+      <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="..." />
+    </ItemGroup>
+  -->
 
   <ItemGroup>
     <Content Include="..\icon.png" Link="Properties\icon.png" PackagePath="" />
   </ItemGroup>
-
-  <!-- For testing only -->
-  <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
-    <Message Importance="high" Text="_PackageFiles: %(_PackageFiles.Identity)" />
-  </Target>
 
 </Project>

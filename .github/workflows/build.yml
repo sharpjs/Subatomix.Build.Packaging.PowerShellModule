@@ -34,9 +34,9 @@ jobs:
           dotnet-version: 3.1.x
 
       - name: Restore Packages
-        run: dotnet restore .root.targets
+        run: dotnet restore
 
-      - name: Stamp
+      - name: Stamp Version
         run: >
           dotnet msbuild .root.targets -t:Stamp
           -p:Configuration=Release
@@ -45,13 +45,12 @@ jobs:
           -p:RepositoryCommit=${{ github.sha }}
 
       - name: Build
-        run: dotnet pack src -c Release
-
-      - name: Test
-        run: dotnet pack test -c Release
+        run: >
+          dotnet build -c Release
+          -p:PackageOutputPath=${{ runner.temp }}\dist
 
       - name: Save Package
         uses: actions/upload-artifact@v2 # https://github.com/actions/upload-artifact
         with:
           name: Package
-          path: dist
+          path: ${{ runner.temp }}\dist
