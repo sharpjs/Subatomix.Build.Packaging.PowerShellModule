@@ -33,21 +33,18 @@ jobs:
         with:
           dotnet-version: 3.1.x
 
-      - name: Build
+      - name: Stamp
         run: >
-          dotnet pack src
-          --configuration Release
+          dotnet msbuild .root.targets -t:Stamp -c Release
           -p:Branch=${{ github.ref }}
           -p:Counter=${{ github.run_number }}
           -p:RepositoryCommit=${{ github.sha }}
 
+      - name: Build
+        run: dotnet pack src -c Release
+
       - name: Test
-        run: >
-          dotnet pack test
-          --configuration Release
-          -p:Branch=${{ github.ref }}
-          -p:Counter=${{ github.run_number }}
-          -p:RepositoryCommit=${{ github.sha }}
+        run: dotnet pack test -c Release
 
       - name: Save Package
         uses: actions/upload-artifact@v2 # https://github.com/actions/upload-artifact

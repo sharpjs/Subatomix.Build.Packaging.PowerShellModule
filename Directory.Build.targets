@@ -17,7 +17,7 @@
   -->
 
   <ItemGroup>
-    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="0.0.0-pre.5">
+    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="0.0.0-pre.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>

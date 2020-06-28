@@ -37,4 +37,10 @@
     <BaseIntermediateOutputPath>.vs\.root\obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <StampFilePath>$(MSBuildThisFileDirectory)Stamp.props</StampFilePath>
+  </PropertyGroup>
+
+  <Import Project="$(StampFilePath)" Condition="Exists('$(StampFilePath)')"/>
+
 </Project>

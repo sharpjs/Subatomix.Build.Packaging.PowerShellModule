@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Management.Automation" Version="7.0.2" PrivateAssets="All" />
-    <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="[$(Version)]" />
+    <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="[$(PackageVersion)]" />
   </ItemGroup>
 
   <ItemGroup>
