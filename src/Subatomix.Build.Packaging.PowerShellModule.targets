@@ -131,12 +131,24 @@
           SkipUnchangedFiles="true" />
   </Target>
 
+  <!--
+    NOTE: Broken when using Pack target and GeneratePackageOnBuild=true.
+          Set GeneratePackageOnBuild=false or use Build target instead.
+  -->
   <Target Name="PublishForPack"
-          DependsOnTargets="$(_PublishNoBuildAlternativeDependsOn)"
+          DependsOnTargets="_PublishForPackBuild;_PublishForPackNoBuild"
           Condition="'$(IsPublishable)' == 'true'">
     <Message Importance="High"
              Text="$(MSBuildProjectName) -> $([System.IO.Path]::GetFullPath('$(PublishDir)'))" />
   </Target>
+
+  <Target Name="_PublishForPackBuild"
+          DependsOnTargets="_PublishBuildAlternative"
+          Condition="'$(GeneratePackageOnBuild)' != 'true' And '$(NoBuild)' != 'true'" />
+
+  <Target Name="_PublishForPackNoBuild"
+          DependsOnTargets="$(_PublishNoBuildAlternativeDependsOn)"
+          Condition="'$(GeneratePackageOnBuild)' == 'true' Or '$(NoBuild)' == 'true'" />
 
   <Target Name="ConfigurePackModule"
           DependsOnTargets="$(ConfigurePackModuleDependsOn)" />
