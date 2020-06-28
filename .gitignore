@@ -5,9 +5,9 @@
 # Build products
 obj/
 bin/
-/.nuget/
 /dist/
-/test/Test.props
+Stamp.props
+Test.props
 
 # Temporary files
 *.log
