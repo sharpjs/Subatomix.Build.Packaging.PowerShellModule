@@ -47,11 +47,9 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <ContentTargetFolders>.</ContentTargetFolders>
-    <DefaultModuleManifestPath Condition="'$(DefaultModuleManifestPath)' == ''">$(MSBuildProjectName).psd1</DefaultModuleManifestPath>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);ConfigurePackModule</TargetsForTfmSpecificContentInPackage>
     <ConfigurePackModuleDependsOn>
       ConfigurePackDepsFile;
-      ConfigurePackModuleManifest;
       ConfigurePackPublishedFile;
       $(ConfigurePackModuleDependsOn)
     </ConfigurePackModuleDependsOn>
@@ -81,54 +79,64 @@
   </ItemDefinitionGroup>
 
   <ItemGroup>
-    <ModuleManifest Include="$(DefaultModuleManifestPath)" Condition="Exists('$(DefaultModuleManifestPath)')" />
-    <None Update="@(ModuleManifest)" CopyToOutputDirectory="Never" />
+    <Psd1Template Include="**\*.psd1.t" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <OutputPath>%(RecursiveDir)%(Filename)</OutputPath>
+    </Psd1Template>
+    <None Update="**\*.psd1.t;Properties\**">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="**\*.psd1">
+      <DependentUpon Condition="Exists('%(RecursiveDir)%(Filename)%(Extension).t')">%(Filename)%(Extension).t</DependentUpon>
+    </None>
   </ItemGroup>
 
-  <Target Name="ResolveModuleManifest">
-    <ItemGroup>
-      <ModuleManifest Condition="'%(ModuleManifest.OutputPath)' == ''">
-        <OutputPath Condition="'%(ModuleManifest.Link)' != ''">%(ModuleManifest.Link)</OutputPath>
-        <OutputPath Condition="'%(ModuleManifest.Link)' == ''">%(ModuleManifest.Identity)</OutputPath>
-      </ModuleManifest>
-      <ModuleManifest Condition="'%(ModuleManifest.PackagePath)' == ''">
-        <PackagePath>%(ModuleManifest.OutputPath)</PackagePath>
-      </ModuleManifest>
-    </ItemGroup>
-  </Target>
-
-  <Target Name="GenerateModuleManifest"
-          DependsOnTargets="ResolveModuleManifest"
-          Condition="@(ModuleManifest->Count()) != 0">
+  <Target Name="GeneratePsd1" BeforeTargets="CoreCompile" Condition="'$(DesignTimeBuild)' != 'true'"
+          Inputs="@(Psd1Template)" Outputs="@(Psd1Template->%(OutputPath))">
     <WriteLinesToFile
-      File="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
+      File="%(Psd1Template.OutputPath)"
       Lines="$(
-        [System.IO.File]::ReadAllText('%(ModuleManifest.FullPath)')
+        [System.IO.File]::ReadAllText('%(Psd1Template.FullPath)')
           .Replace(`{VersionPrefix}`, $(VersionPrefix))
           .Replace(`{VersionSuffix}`, $(VersionSuffix))
           .Replace(`{Copyright}`,     $(Copyright))
       )"
       Encoding="UTF-8"
       Overwrite="true"
-      WriteOnlyWhenDifferent="true" />
+      WriteOnlyWhenDifferent="true"
+    />
+    <ItemGroup>
+      <None Include="%(Psd1Template.OutputPath)" Exclude="@(None)">
+        <DependentUpon>%(Psd1Template.Identity)</DependentUpon>
+      </None>
+    </ItemGroup>
   </Target>
 
-  <Target Name="CopyModuleManifestToOutputDirectory"
-          AfterTargets="CopyFilesToOutputDirectory"
-          DependsOnTargets="GenerateModuleManifest"
-          Condition="@(ModuleManifest->Count()) != 0">
-    <Copy SourceFiles="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
-          DestinationFiles="$(OutDir)%(ModuleManifest.OutputPath)"
-          SkipUnchangedFiles="true" />
+  <Target Name="ConfigurePackModule" DependsOnTargets="$(ConfigurePackModuleDependsOn)" />
+
+  <Target Name="ConfigurePackDepsFile" DependsOnTargets="PublishForPack">
+    <ItemGroup>
+      <_DepsFile Include="$(PublishDepsFilePath)"/>
+    </ItemGroup>
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="@(_DepsFile)">
+        <PackagePath>%(_DepsFile.Filename)%(_DepsFile.Extension)</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
   </Target>
 
-  <Target Name="CopyModuleManifestToPublishDirectory"
-          AfterTargets="CopyFilesToPublishDirectory"
-          DependsOnTargets="GenerateModuleManifest"
-          Condition="@(ModuleManifest->Count()) != 0">
-    <Copy SourceFiles="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)"
-          DestinationFiles="$(PublishDir)%(ModuleManifest.OutputPath)"
-          SkipUnchangedFiles="true" />
+  <Target Name="ConfigurePackPublishedFile" DependsOnTargets="PublishForPack">
+    <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
+                             PublishDir="$(PublishDir)"
+                             TargetFramework="all">
+      <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
+              ItemName="_ResolvedFileToPublishWithPackagePath" />
+    </ResolveToolPackagePaths>
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="@(_ResolvedFileToPublishWithPackagePath)">
+        <!-- Remove 'tools/all/any/' prefix (length 14) -->
+        <PackagePath>$([System.String]::Copy('%(_ResolvedFileToPublishWithPackagePath.PackagePath)').Substring(14))</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
   </Target>
 
   <!--
@@ -149,42 +157,5 @@
   <Target Name="_PublishForPackNoBuild"
           DependsOnTargets="$(_PublishNoBuildAlternativeDependsOn)"
           Condition="'$(GeneratePackageOnBuild)' == 'true' Or '$(NoBuild)' == 'true'" />
-
-  <Target Name="ConfigurePackModule"
-          DependsOnTargets="$(ConfigurePackModuleDependsOn)" />
-
-  <Target Name="ConfigurePackDepsFile" DependsOnTargets="PublishForPack">
-    <ItemGroup>
-      <_DepsFile Include="$(PublishDepsFilePath)"/>
-    </ItemGroup>
-    <ItemGroup>
-      <TfmSpecificPackageFile Include="@(_DepsFile)">
-        <PackagePath>%(_DepsFile.Filename)%(_DepsFile.Extension)</PackagePath>
-      </TfmSpecificPackageFile>
-    </ItemGroup>
-  </Target>
-
-  <Target Name="ConfigurePackModuleManifest" DependsOnTargets="GenerateModuleManifest">
-    <ItemGroup>
-      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)%(ModuleManifest.OutputPath)">
-        <PackagePath>%(ModuleManifest.PackagePath)</PackagePath>
-      </TfmSpecificPackageFile>
-    </ItemGroup>
-  </Target>
-
-  <Target Name="ConfigurePackPublishedFile" DependsOnTargets="PublishForPack">
-    <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
-                             PublishDir="$(PublishDir)"
-                             TargetFramework="all">
-      <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
-              ItemName="_ResolvedFileToPublishWithPackagePath" />
-    </ResolveToolPackagePaths>
-    <ItemGroup>
-      <TfmSpecificPackageFile Include="@(_ResolvedFileToPublishWithPackagePath)">
-        <!-- Remove 'tools/all/any/' prefix (length 14) -->
-        <PackagePath>$([System.String]::Copy('%(_ResolvedFileToPublishWithPackagePath.PackagePath)').Substring(14))</PackagePath>
-      </TfmSpecificPackageFile>
-    </ItemGroup>
-  </Target>
 
 </Project>

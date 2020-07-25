@@ -8,6 +8,7 @@ bin/
 /dist/
 Stamp.props
 Test.props
+*.psd1
 
 # Temporary files
 *.log
