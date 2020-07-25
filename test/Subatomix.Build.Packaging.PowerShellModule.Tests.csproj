@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Management.Automation" Version="7.0.2" PrivateAssets="All" />
+    <PackageReference Include="System.Management.Automation" Version="7.0.3" PrivateAssets="All" />
   </ItemGroup>
 
   <!--
