@@ -100,10 +100,10 @@
           .Replace(`{VersionSuffix}`, $(VersionSuffix))
           .Replace(`{Copyright}`,     $(Copyright))
       )"
-      Encoding="UTF-8"
       Overwrite="true"
       WriteOnlyWhenDifferent="true"
     />
+    <!-- Without Encoding attribute, writes UTF-8-without-BOM. -->
     <ItemGroup>
       <None Include="%(Psd1Template.OutputPath)" Exclude="@(None)">
         <DependentUpon>%(Psd1Template.Identity)</DependentUpon>
