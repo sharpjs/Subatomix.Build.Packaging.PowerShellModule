@@ -90,7 +90,7 @@
     </None>
   </ItemGroup>
 
-  <Target Name="GeneratePsd1" BeforeTargets="CoreCompile" Condition="'$(DesignTimeBuild)' != 'true'"
+  <Target Name="GeneratePsd1" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true'"
           Inputs="@(Psd1Template)" Outputs="@(Psd1Template->%(OutputPath))">
     <WriteLinesToFile
       File="%(Psd1Template.OutputPath)"
