@@ -29,10 +29,11 @@
           Pack="true" PackagePath="$(PackageLicenseFile)" CopyToOutputDirectory="Never" />
   </ItemGroup>
 
+  <!-- Versioning -->
   <ItemGroup>
     <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="0.0.0-pre.7">
       <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>build</IncludeAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
