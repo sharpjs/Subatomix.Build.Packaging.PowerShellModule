@@ -16,8 +16,21 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   -->
 
+  <!--
+    * Imported late: project -> SDK .targets -> NuGet package .targets -> this
+    * Override properties and targets here.
+    https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
+  -->
+
+  <ItemGroup Condition="$(IsPackable)">
+    <None Include="..\icon.png" Link="Properties\icon.png"
+          Pack="true" PackagePath="" CopyToOutputDirectory="Never" />
+    <None Include="..\LICENSE.txt" Link="Properties\LICENSE.txt"
+          Pack="true" PackagePath="$(PackageLicenseFile)" CopyToOutputDirectory="Never" />
+  </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="0.0.0-pre.6">
+    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="0.0.0-pre.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
