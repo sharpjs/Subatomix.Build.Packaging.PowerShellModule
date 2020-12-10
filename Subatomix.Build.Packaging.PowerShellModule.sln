@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = ".root", ".root.targets", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.Build.Packaging.PowerShellModule", "src\Subatomix.Build.Packaging.PowerShellModule.proj", "{21830F93-D46D-4617-B9F3-EFA8E2DA04AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.Build.Packaging.PowerShellModule.Tests", "test\Subatomix.Build.Packaging.PowerShellModule.Tests.csproj", "{3D30AE59-62F8-4BCF-A490-F07849F39AB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.ExampleModule", "test\Subatomix.ExampleModule.csproj", "{3D30AE59-62F8-4BCF-A490-F07849F39AB4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{21830F93-D46D-4617-B9F3-EFA8E2DA04AD} = {21830F93-D46D-4617-B9F3-EFA8E2DA04AD}
 	EndProjectSection

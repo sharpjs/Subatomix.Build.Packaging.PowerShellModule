@@ -17,7 +17,7 @@
   -->
 
   <PropertyGroup>
-    <Description>Test module for Subatomix.Build.Packaging.PowerShellModule</Description>
+    <Description>Example module built with Subatomix.Build.Packaging.PowerShellModule</Description>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

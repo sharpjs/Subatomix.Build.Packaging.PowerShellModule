@@ -16,11 +16,11 @@
 @{
     # Identity
     GUID          = 'ae120094-bc65-4ad6-8550-08d4e7eff79a'
-    RootModule    = 'Subatomix.Build.Packaging.PowerShellModule.Tests.psm1'
+    RootModule    = 'Subatomix.ExampleModule.psm1'
     ModuleVersion = '{VersionPrefix}'
 
     # General
-    Description = 'Test/example module for Subatomix.Build.Packaging.PowerShellModule'
+    Description = 'Example module built with Subatomix.Build.Packaging.PowerShellModule'
     Author      = 'Jeffrey Sharp'
     CompanyName = 'Subatomix Research Inc.'
     Copyright   = '{Copyright}'
@@ -31,7 +31,7 @@
 
     # Load Before Import
     #RequiredModules   = @()
-    RequiredAssemblies = @('Subatomix.Build.Packaging.PowerShellModule.Tests.dll')
+    RequiredAssemblies = @('Subatomix.ExampleModule.dll')
 
     # Run On Import
     #ScriptsToProcess = @(...) # Script files (.ps1)    run in caller's environment
@@ -56,7 +56,7 @@
         PSData = @{
             # Additional metadata
             Prerelease   = '{VersionSuffix}'
-            Tags         = @('Subatomix', 'Test', 'Packaging')
+            Tags         = @('Subatomix', 'Packaging', 'Example')
             ProjectUri   = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule'
             ReleaseNotes = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule.git'
             LicenseUri   = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/blob/master/LICENSE.txt'
