@@ -16,7 +16,8 @@ on:
       - release/*
 
 env:
-  DOTNET_NOLOGO: true
+  # Minimize noise from dotnet CLI
+  DOTNET_NOLOGO: 1
 
 jobs:
   build:
@@ -25,13 +26,12 @@ jobs:
 
     steps:
       - name: Check Out Code
-        uses: actions/checkout@v2 # https://github.com/actions/checkout
-        with:
-          clean: true
-          fetch-depth: 16
+        uses: actions/checkout@v2
+        #url: https://github.com/actions/checkout
 
       - name: Configure .NET Core
-        uses: actions/setup-dotnet@v1 # https://github.com/actions/setup-dotnet
+        uses: actions/setup-dotnet@v1
+        #url: https://github.com/actions/setup-dotnet
         with:
           dotnet-version: 3.1.x
 
