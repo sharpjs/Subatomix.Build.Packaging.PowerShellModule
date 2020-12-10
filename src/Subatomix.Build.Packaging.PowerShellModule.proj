@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.Build.NoTargets/1.0.110">
+﻿<Project Sdk="Microsoft.Build.NoTargets/2.0.1">
   <!-- https://github.com/microsoft/MSBuildSdks/tree/master/src/NoTargets -->
 
   <!--
@@ -19,7 +19,7 @@
 
   <PropertyGroup>
     <Description>PowerShell module packaging support for .NET SDK-style projects</Description>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <GenerateDependencyFile>false</GenerateDependencyFile>
