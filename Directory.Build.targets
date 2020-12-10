@@ -36,7 +36,7 @@
 
   <!-- Simulate a reference to the package from the test project. -->
   <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.targets"
-          Condition="'$(MSBuildProjectName)' == 'Subatomix.Build.Packaging.PowerShellModule.Tests'" />
+          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
 
   <Target Name="_CheckIfWillCreatePackage" BeforeTargets="GenerateNuspec"
           Condition="'$(IsPackable)' == 'true' And '$(ContinuePackingAfterGeneratingNuspec)' == 'true'"
