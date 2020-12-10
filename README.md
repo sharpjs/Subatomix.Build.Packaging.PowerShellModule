@@ -24,7 +24,7 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
   <ItemGroup>
     <PackageReference
       Include="System.Management.Automation"
-      Version="7.0.2"
+      Version="7.0.3"
       PrivateAssets="All" />
     <PackageReference
       Include="Subatomix.Build.Packaging.PowerShellModule"
