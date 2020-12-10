@@ -113,9 +113,24 @@
   <Target Name="ConfigurePackModule" DependsOnTargets="$(ConfigurePackModuleDependsOn)" />
 
   <Target Name="ConfigurePackPublishedFile" DependsOnTargets="PublishForPack">
+    <!--
+      References:
+      - https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets
+      - https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/ResolveToolPackagePaths.cs
+    -->
     <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
                              PublishDir="$(PublishDir)"
                              TargetFrameworkMoniker="all">
+      <!--
+        Not needed: AppHostIntermediatePath="$(AppHostIntermediatePath)"
+          That is used specifically to avoid packing an app host in a dotnet
+          tool, a scenario in which executable shims are generated on install.
+        Not needed: TargetFrameworkMoniker="$(TargetFrameworkMoniker)"
+        Not needed: TargetPlatformMoniker="$(TargetPlatformMoniker)"
+          That is used to pack in the appriate subdirectory of 'tools', which
+          is desired for a dotnet tool but not for a PowerShell module.  Just
+          force a static path, so that it can be removed by the code below.
+      -->
       <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
               ItemName="_ResolvedFileToPublishWithPackagePath" />
     </ResolveToolPackagePaths>
