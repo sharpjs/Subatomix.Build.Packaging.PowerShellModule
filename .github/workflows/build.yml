@@ -7,11 +7,13 @@ on:
   push:
     branches:
       - master
+      - release/*
     tags:
       - release/*
   pull_request:
     branches:
-      - '*'
+      - master
+      - release/*
 
 env:
   DOTNET_NOLOGO: true
