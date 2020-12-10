@@ -1,21 +1,21 @@
-# Visual Studio local files
-/.vs/
-*.user
-
 # Build products
 obj/
 bin/
 /dist/
-Stamp.props
-Test.props
+/Stamp.props
+/Test.props
 *.psd1
+
+# Visual Studio
+.vs/
+*.user
 
 # Temporary files
 *.log
 *.old
 *.tmp
 
-# Git junk
+# Git
 *.orig
 *.patch
 *.rej
