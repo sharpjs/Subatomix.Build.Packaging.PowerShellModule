@@ -31,7 +31,7 @@
 
   <!-- Versioning -->
   <ItemGroup>
-    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="0.0.0-pre.7" PrivateAssets="All" />
+    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="1.0.0-rc.1" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Simulate a reference to the package from the test project. -->
