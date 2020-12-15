@@ -6,7 +6,7 @@ projects.
 
 ## Status
 
-Experimental
+In use by a handful of modules.
 
 ## Usage
 
@@ -33,3 +33,7 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
 
 </Project>
 ```
+
+For a complete example, see this repository's
+[test project](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/tree/master/test).
+It can serve as a template for new PowerShell module projects.
