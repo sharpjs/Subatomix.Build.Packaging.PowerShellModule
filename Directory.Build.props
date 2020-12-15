@@ -29,7 +29,7 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <Authors>Jeffrey Sharp</Authors>
     <Company>Subatomix Research, Inc.</Company>
-    <Copyright>ⓒ $([System.DateTime]::UtcNow.Year) Jeffrey Sharp, Subatomix Research Inc.</Copyright>
+    <Copyright>© $([System.DateTime]::UtcNow.Year) Jeffrey Sharp, Subatomix Research Inc.</Copyright>
     <PackageLicenseExpression>ISC</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule</PackageProjectUrl>
     <PackageTags>PowerShell Module NuGet Pack MSBuild</PackageTags>
