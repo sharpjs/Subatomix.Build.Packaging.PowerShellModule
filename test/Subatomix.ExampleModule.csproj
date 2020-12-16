@@ -29,7 +29,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- This PackageReference is simulated via direct import in Directory.Build.targets:
+    <!--
+      When using this file as a template for new projects, uncomment the
+      following PackageReference and populate its Version attribute.
+    -->
+    <!--
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule" Version="..." PrivateAssets="All "/>
     -->
     <PackageReference Include="System.Management.Automation" Version="7.0.3" PrivateAssets="All" />
