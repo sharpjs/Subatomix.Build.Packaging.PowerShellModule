@@ -38,8 +38,9 @@
   <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.targets"
           Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
 
+  <!-- Print source paths of packaged files -->
   <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
-    <Message Importance="high" Text="_PackageFiles: %(_PackageFiles.Identity)" />
+    <Message Importance="high" Text="_PackageFiles: %(_PackageFiles.PackagePath)\%(_PackageFiles.Filename)%(_PackageFiles.Extension)" />
   </Target>
 
 </Project>
