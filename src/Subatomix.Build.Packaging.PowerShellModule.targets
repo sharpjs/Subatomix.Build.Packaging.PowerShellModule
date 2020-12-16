@@ -40,6 +40,9 @@
     https://docs.microsoft.com/en-us/visualstudio/msbuild/item-functions?view=vs-2019
 
     ResolveToolPackagePaths task
+    https://github.com/dotnet/sdk/blob/v3.1.404/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets
+    https://github.com/dotnet/sdk/blob/v3.1.404/src/Tasks/Microsoft.NET.Build.Tasks/ResolveToolPackagePaths.cs
+    https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets
     https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/ResolveToolPackagePaths.cs
   -->
 
@@ -49,6 +52,7 @@
     <ContentTargetFolders>.</ContentTargetFolders>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);ConfigurePackModule</TargetsForTfmSpecificContentInPackage>
     <ConfigurePackModuleDependsOn>
+      ConfigurePackDepsFile;<!-- .NET Core 3.1 SDK and earlier -->
       ConfigurePackPublishedFile;
       $(ConfigurePackModuleDependsOn)
     </ConfigurePackModuleDependsOn>
@@ -112,34 +116,49 @@
 
   <Target Name="ConfigurePackModule" DependsOnTargets="$(ConfigurePackModuleDependsOn)" />
 
-  <Target Name="ConfigurePackPublishedFile" DependsOnTargets="PublishForPack">
-    <!--
-      References:
-      - https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets
-      - https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/ResolveToolPackagePaths.cs
-    -->
-    <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
-                             PublishDir="$(PublishDir)"
-                             TargetFrameworkMoniker="all">
-      <!--
-        Not needed: AppHostIntermediatePath="$(AppHostIntermediatePath)"
-          That is used specifically to avoid packing an app host in a dotnet
-          tool, a scenario in which executable shims are generated on install.
-        Not needed: TargetFrameworkMoniker="$(TargetFrameworkMoniker)"
-        Not needed: TargetPlatformMoniker="$(TargetPlatformMoniker)"
-          That is used to pack in the appriate subdirectory of 'tools', which
-          is desired for a dotnet tool but not for a PowerShell module.  Just
-          force a static path, so that it can be removed by the code below.
-      -->
-      <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
-              ItemName="_ResolvedFileToPublishWithPackagePath" />
-    </ResolveToolPackagePaths>
+  <Target Name="ConfigurePackDepsFile" DependsOnTargets="PublishForPack"
+          Condition=" $(NETCoreSdkVersion) &lt; 5.0.0">
     <ItemGroup>
+      <_DepsFile Include="$(PublishDepsFilePath)"/>
+    </ItemGroup>
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="@(_DepsFile)">
+        <PackagePath>%(_DepsFile.Filename)%(_DepsFile.Extension)</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ConfigurePackPublishedFile"
+          DependsOnTargets="
+            _ConfigurePackPublishedFilesNetCore;
+            _ConfigurePackPublishedFilesSinceNet5
+          ">
+    <ItemGroup>
+      <!-- Remove 'tools/all/any/' prefix (length 14) from package paths -->
       <TfmSpecificPackageFile Include="@(_ResolvedFileToPublishWithPackagePath)">
-        <!-- Remove 'tools/all/any/' prefix (length 14) -->
         <PackagePath>$([System.String]::Copy('%(_ResolvedFileToPublishWithPackagePath.PackagePath)').Substring(14))</PackagePath>
       </TfmSpecificPackageFile>
     </ItemGroup>
+  </Target>
+
+  <Target Name="_ConfigurePackPublishedFilesNetCore" DependsOnTargets="PublishForPack"
+          Condition=" $(NETCoreSdkVersion) &lt; 5.0.0">
+    <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
+                             PublishDir="$(PublishDir)"
+                             TargetFramework="all">
+      <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
+              ItemName="_ResolvedFileToPublishWithPackagePath" />
+    </ResolveToolPackagePaths>
+  </Target>
+
+  <Target Name="_ConfigurePackPublishedFilesSinceNet5" DependsOnTargets="PublishForPack"
+    Condition=" $(NETCoreSdkVersion) &gt;= 5.0.0">
+    <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
+                             PublishDir="$(PublishDir)"
+                             TargetFrameworkMoniker="all">
+      <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
+              ItemName="_ResolvedFileToPublishWithPackagePath" />
+    </ResolveToolPackagePaths>
   </Target>
 
   <!--
