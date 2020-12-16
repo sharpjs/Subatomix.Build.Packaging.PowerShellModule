@@ -34,27 +34,9 @@
     <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="1.0.0-rc.1" PrivateAssets="All" />
   </ItemGroup>
 
-  <!-- Simulate a reference to the package from the test project. -->
+  <!-- Simulate a reference to the package from the test project -->
   <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.targets"
           Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
-
-  <Target Name="_CheckIfWillCreatePackage" BeforeTargets="GenerateNuspec"
-          Condition="'$(IsPackable)' == 'true' And '$(ContinuePackingAfterGeneratingNuspec)' == 'true'"
-          Inputs="@(NuGetPackInput)" Outputs="@(NuGetPackOutput)">
-    <!-- https://docs.microsoft.com/en-us/visualstudio/msbuild/incremental-builds#determine-whether-a-target-has-been-run -->                       
-    <CreateProperty Value="true">
-      <Output PropertyName="_WillCreatePackage" TaskParameter="ValueSetByTask" />
-    </CreateProperty>
-  </Target>
-
-  <Target Name="RemoveCachedPackage" AfterTargets="GenerateNuspec"
-          Condition="'$(_WillCreatePackage)' == 'true'">
-    <PropertyGroup>
-      <CachedPackageDir>$([MSBuild]::EnsureTrailingSlash("$(NuGetPackageRoot)"))$(PackageId)\$(PackageVersion)</CachedPackageDir>
-    </PropertyGroup>
-    <RemoveDir Directories="$(CachedPackageDir)" ContinueOnError="true" />
-    <Message Importance="high" Text="Removed cached package $(CachedPackageDir)" />
-  </Target>
 
   <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
     <Message Importance="high" Text="_PackageFiles: %(_PackageFiles.Identity)" />
