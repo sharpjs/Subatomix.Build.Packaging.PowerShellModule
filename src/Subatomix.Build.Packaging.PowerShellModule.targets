@@ -54,6 +54,10 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <ContentTargetFolders>.</ContentTargetFolders>
+    <CoreBuildDependsOn>
+      GeneratePsd1;
+      $(CoreBuildDependsOn)
+    </CoreBuildDependsOn>
     <TargetsForTfmSpecificContentInPackage>
       $(TargetsForTfmSpecificContentInPackage);
       ConfigurePackModule
@@ -84,26 +88,44 @@
     -->
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- Define the Psd1Template item type -->
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)Psd1Template.xml" />
+
+    <!-- Set the target used to build Psd1Template items -->
+    <AvailableItemName Include="Psd1Template" Targets="GeneratePsd1" />
+  </ItemGroup>
+
+  <!-- Default CopyToOutputDirectory behavior -->
   <ItemDefinitionGroup>
     <None CopyToOutputDirectory="PreserveNewest" />
+    <Psd1Template CopyToOutputDirectory="Never" />
   </ItemDefinitionGroup>
 
   <ItemGroup>
-    <Psd1Template Include="**\*.psd1.t" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
-      <OutputPath>%(RecursiveDir)%(Filename)</OutputPath>
-    </Psd1Template>
-    <None Update="**\*.psd1.t;Properties\**">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="**\*.psd1">
-      <DependentUpon Condition="Exists('%(RecursiveDir)%(Filename)%(Extension).t')">%(Filename)%(Extension).t</DependentUpon>
-    </None>
+    <!-- Do not include the Properties directory in build output or package -->
+    <None Update="Properties\**" CopyToOutputDirectory="Never" />
+
+    <!-- .psd1.t files should be Psd1Template items, not None items -->
+    <None Remove="**\*.psd1.t" />
+
+    <!-- Include .psd1.t files as Psd1Template items -->
+    <Psd1Template Include="**\*.psd1.t" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
+  <!-- Trigger rebuild if output .psd1 files are missing or outdated -->
+  <Target Name="Psd1CollectUpToDateCheckBuiltDesignTime" BeforeTargets="CollectUpToDateCheckBuiltDesignTime" >
+    <ItemGroup>
+      <UpToDateCheckBuilt Include="$(OutDir)%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)">
+        <Original>%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)%(Psd1Template.Extension)</Original>
+      </UpToDateCheckBuilt>
+    </ItemGroup>
+  </Target>
+
   <Target Name="GeneratePsd1" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true'"
-          Inputs="@(Psd1Template)" Outputs="@(Psd1Template->%(OutputPath))">
+          Inputs="@(Psd1Template)" Outputs="@(Psd1Template->'$(OutDir)%(RecursiveDir)%(Filename)')">
     <WriteLinesToFile
-      File="%(Psd1Template.OutputPath)"
+      File="$(OutDir)%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)"
       Lines="$(
         [System.IO.File]::ReadAllText('%(Psd1Template.FullPath)')
           .Replace(`{VersionPrefix}`, $(VersionPrefix))
@@ -115,9 +137,19 @@
     />
     <!-- Without Encoding attribute, writes UTF-8-without-BOM. -->
     <ItemGroup>
-      <None Include="%(Psd1Template.OutputPath)" Exclude="@(None)">
-        <DependentUpon>%(Psd1Template.Identity)</DependentUpon>
-      </None>
+      <FileWrites Include="$(OutDir)%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CollectPsd1ForPublish" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <_Psd1File Include="@(Psd1Template->'$(OutDir)%(RecursiveDir)%(Filename)')">
+        <RelativePath>%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)</RelativePath>
+      </_Psd1File>
+      <ResolvedFileToPublish Include="@(_Psd1File->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(_Psd1File.RelativePath)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
 

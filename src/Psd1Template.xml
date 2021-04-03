@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <!--
+    Copyright 2021 Subatomix Research, Inc.
+
+    Permission to use, copy, modify, and distribute this software for any
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  -->
+
+  <!--
+    Psd1Template item type
+
+    NOTE: UpToDateCheckInput is false here, because the .targets file provides
+    finer-grained up-to-date check behavior via UpToDateCheckBuilt items with
+    Original metadata.
+  -->
+  <ItemType Name="Psd1Template" DisplayName="PSD1 Template" UpToDateCheckInput="false" />
+
+  <!--
+    Psd1Template content type
+
+    This is needed to associate .psd1.t files with the Psd1Template item type.
+  -->
+  <ContentType Name="Psd1Template" ItemType="Psd1Template" DisplayName="PSD1 Template" />
+
+  <!--
+    Associate .psd1.t files with the Psd1Template item type.
+  -->
+  <FileExtension Name=".psd1.t" ContentType="Psd1Template" />
+</ProjectSchemaDefinitions>
