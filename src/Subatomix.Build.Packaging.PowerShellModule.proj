@@ -35,8 +35,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="*.props" />
-    <Content Include="*.targets" />
+    <Content Include="**" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
   </ItemGroup>
 
 </Project>
