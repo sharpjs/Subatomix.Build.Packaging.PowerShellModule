@@ -162,7 +162,7 @@
     </ItemGroup>
     <ItemGroup>
       <TfmSpecificPackageFile Include="@(_DepsFile)">
-        <PackagePath>%(_DepsFile.Filename)%(_DepsFile.Extension)</PackagePath>
+        <PackagePath></PackagePath>
       </TfmSpecificPackageFile>
     </ItemGroup>
   </Target>
