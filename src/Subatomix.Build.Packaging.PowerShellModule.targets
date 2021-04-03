@@ -133,7 +133,6 @@
           .Replace(`{Copyright}`,     $(Copyright))
       )"
       Overwrite="true"
-      WriteOnlyWhenDifferent="true"
     />
     <!-- Without Encoding attribute, writes UTF-8-without-BOM. -->
     <ItemGroup>
