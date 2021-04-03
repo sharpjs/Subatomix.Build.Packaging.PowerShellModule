@@ -49,6 +49,7 @@
     AliasesToExport      = @()
     DscResourcesToExport = @()
     CmdletsToExport      = @()
+
     DefaultCommandPrefix = '' # Override using Import-Module -Prefix
 
     # Private data to pass to the RootModule

@@ -13,8 +13,9 @@
     ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #>
-
-function Test-PowerShellModulePackaging {
-    [Subatomix.ExampleModule.ExampleObject]::new()
-    "It works!"
+@{
+    ModuleVersion = '{VersionPrefix}'
+    Copyright   = '{Copyright}'
+    PrivateData = @{ PSData = @{ Prerelease   = '{VersionSuffix}' } }
 }
+
