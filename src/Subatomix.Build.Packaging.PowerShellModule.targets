@@ -54,7 +54,10 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <ContentTargetFolders>.</ContentTargetFolders>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);ConfigurePackModule</TargetsForTfmSpecificContentInPackage>
+    <TargetsForTfmSpecificContentInPackage>
+      $(TargetsForTfmSpecificContentInPackage);
+      ConfigurePackModule
+    </TargetsForTfmSpecificContentInPackage>
     <ConfigurePackModuleDependsOn>
       ConfigurePackDepsFile;<!-- .NET Core 3.1 SDK and earlier -->
       ConfigurePackPublishedFile;
