@@ -15,7 +15,7 @@
 #>
 @{
     ModuleVersion = '{VersionPrefix}'
-    Copyright   = '{Copyright}'
-    PrivateData = @{ PSData = @{ Prerelease   = '{VersionSuffix}' } }
+    Copyright     = '{Copyright}'
+    PrivateData   = @{ PSData = @{ Prerelease = '{VersionSuffix}' } }
 }
 
