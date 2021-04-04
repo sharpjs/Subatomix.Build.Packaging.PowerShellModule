@@ -19,6 +19,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <EnableDefaultItems>false</EnableDefaultItems>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
@@ -31,7 +32,7 @@
 
   <ItemGroup>
     <None Include="**" Exclude="src\**;test\**;dist\**;$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
-    <None Include=".github\**" />
+    <None Include=".*\**" Exclude=".git\**;.vs\**" />
   </ItemGroup>
 
 </Project>
