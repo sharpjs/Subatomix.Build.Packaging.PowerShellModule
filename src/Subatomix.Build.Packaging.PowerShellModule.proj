@@ -20,6 +20,7 @@
   <PropertyGroup>
     <Description>PowerShell module packaging support for .NET SDK-style projects</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <EnableDefaultItems>false</EnableDefaultItems>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
