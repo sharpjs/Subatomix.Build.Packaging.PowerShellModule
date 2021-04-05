@@ -21,4 +21,4 @@ $PSDefaultParameterValues.Clear()
 Set-StrictMode -Version Latest
 
 # Read all .ps1 files
-Get-ChildItem $PSScriptRoot -Filter *.ps1 | ForEach-Object { . $_ }
+Join-Path $PSScriptRoot Commands *.ps1 -Resolve | ForEach-Object { . $_ }
