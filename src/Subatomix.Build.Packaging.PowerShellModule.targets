@@ -17,10 +17,17 @@
   -->
 
   <!--
-    This file makes 'dotnet pack' and the Pack command in Visual Studio
-    produce a PowerShell module nupkg suitable for publishing in a repository.
+    This package makes 'dotnet pack' and the Pack command in Visual Studio
+    produce a PowerShell module .nupkg suitable for publishing in a repository.
+
+    Import order:
+    | project -> SDK .targets -> NuGet package .targets -> Directory.Build.targets
+    |                            ^^^^^^^^^here^^^^^^^^^
 
     REFERENCES
+
+    Customize your build
+    https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
 
     Common MSBuild project properties
     https://docs.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
@@ -52,26 +59,24 @@
 
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    <ContentTargetFolders>.</ContentTargetFolders>
-    <CoreBuildDependsOn>
-      GeneratePsd1;
-      $(CoreBuildDependsOn)
-    </CoreBuildDependsOn>
-    <TargetsForTfmSpecificContentInPackage>
-      $(TargetsForTfmSpecificContentInPackage);
-      ConfigurePackModule
-    </TargetsForTfmSpecificContentInPackage>
-    <ConfigurePackModuleDependsOn>
-      ConfigurePackDepsFile;<!-- .NET Core 3.1 SDK and earlier -->
-      ConfigurePackPublishedFile;
-      $(ConfigurePackModuleDependsOn)
-    </ConfigurePackModuleDependsOn>
-  </PropertyGroup>
 
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);NU5100;NU5110;NU5111</NoWarn>
     <!--
+      PowerShell modules depend on other PowerShell modules, not on typical
+      NuGet packages.  Those module dependencies are specified in .psd1 files
+      (aka module manifests).  Dependency DLLs typically ship with the module.
+      Thus the .nuspec of the module should not declare any NuGet dependencies.
+    -->
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+
+    <!--
+      PowerShell module files should appear at the root of the package.
+    -->
+    <ContentTargetFolders>.</ContentTargetFolders>
+
+    <!--
+      Turn off warnings complaining that the module is not structured like a
+      typical .NET NuGet package.  They do not apply to PowerShell modules.
+
       NU5100: The assembly '...' is not inside the 'lib' folder and hence it
               won't be added as a reference when the package is installed into
               a project. Move it into the 'lib' folder if it needs to be
@@ -86,46 +91,66 @@
               to install.ps1, uninstall.ps1 or init.ps1 and place it directly
               under 'tools'.
     -->
+    <NoWarn>$(NoWarn);NU5100;NU5110;NU5111</NoWarn>
+
+    <CoreBuildDependsOn>
+      GeneratePsd1;
+      $(CoreBuildDependsOn)
+    </CoreBuildDependsOn>
+
+    <TargetsForTfmSpecificContentInPackage>
+      $(TargetsForTfmSpecificContentInPackage);
+      ConfigurePackModule
+    </TargetsForTfmSpecificContentInPackage>
+
+    <ConfigurePackModuleDependsOn>
+      ConfigurePackDepsFile;<!-- .NET Core 3.1 SDK and earlier -->
+      ConfigurePackPublishedFile;
+      $(ConfigurePackModuleDependsOn)
+    </ConfigurePackModuleDependsOn>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- Define the Psd1Template item type -->
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)Psd1Template.xml" />
-
-    <!-- Set the target used to build Psd1Template items -->
-    <AvailableItemName Include="Psd1Template" Targets="GeneratePsd1" />
-  </ItemGroup>
-
-  <!-- Default CopyToOutputDirectory behavior -->
   <ItemDefinitionGroup>
-    <None CopyToOutputDirectory="PreserveNewest" />
-    <Psd1Template CopyToOutputDirectory="Never" />
+    <Content>
+      <!--
+        This package tracks PowerShell files (.ps1, .psm1, ...) as Content
+        items.  Copy them to the output and publish directories so that the
+        file layout at F5 run approximates that of the installed module.
+      -->
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+
+      <!--
+        This package configures the build to pack all published items.  To
+        avoid duplicates, undo the pack-by-default 
+      -->
+      <Pack>false</Pack>
+    </Content>
   </ItemDefinitionGroup>
 
   <ItemGroup>
-    <!-- Do not include the Properties directory in build output or package -->
-    <None Update="Properties\**" CopyToOutputDirectory="Never" />
+    <!-- Prevent PowerShell files from being duplicated as None items -->
+    <None Remove="$(PowerShellItemIncludes)"/>
 
-    <!-- .psd1.t files should be Psd1Template items, not None items -->
-    <None Remove="**\*.psd1.t" />
-
-    <!-- Include .psd1.t files as Psd1Template items -->
-    <Psd1Template Include="**\*.psd1.t" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <!-- Nest generated .psd1 files under their templates -->
+    <Content Update="**\*.psd1">
+      <DependentUpon Condition="Exists('%(Identity).t')">%(Filename)%(Extension).t</DependentUpon>
+    </Content>
   </ItemGroup>
 
-  <!-- Trigger rebuild if output .psd1 files are missing or outdated -->
+  <!-- Trigger rebuild if generated .psd1 files are missing or outdated -->
   <Target Name="Psd1CollectUpToDateCheckBuiltDesignTime" BeforeTargets="CollectUpToDateCheckBuiltDesignTime" >
     <ItemGroup>
-      <UpToDateCheckBuilt Include="$(OutDir)%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)">
+      <UpToDateCheckBuilt Include="%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)">
         <Original>%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)%(Psd1Template.Extension)</Original>
       </UpToDateCheckBuilt>
     </ItemGroup>
   </Target>
 
+  <!-- Generate .psd1 files from the .psd1.t templates -->
   <Target Name="GeneratePsd1" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true'"
-          Inputs="@(Psd1Template)" Outputs="@(Psd1Template->'$(OutDir)%(RecursiveDir)%(Filename)')">
+          Inputs="@(Psd1Template)" Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
     <WriteLinesToFile
-      File="$(OutDir)%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)"
+      File="%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)"
       Lines="$(
         [System.IO.File]::ReadAllText('%(Psd1Template.FullPath)')
           .Replace(`{VersionPrefix}`, $(VersionPrefix))
@@ -134,21 +159,14 @@
       )"
       Overwrite="true"
     />
-    <!-- Without Encoding attribute, writes UTF-8-without-BOM. -->
     <ItemGroup>
-      <FileWrites Include="$(OutDir)%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)" />
-    </ItemGroup>
-  </Target>
+      <!-- Enlist generated file to be removed on next Clean. -->
+      <FileWrites Include="%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)" />
 
-  <Target Name="CollectPsd1ForPublish" AfterTargets="ComputeResolvedFilesToPublishList">
-    <ItemGroup>
-      <_Psd1File Include="@(Psd1Template->'$(OutDir)%(RecursiveDir)%(Filename)')">
-        <RelativePath>%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)</RelativePath>
-      </_Psd1File>
-      <ResolvedFileToPublish Include="@(_Psd1File->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>%(_Psd1File.RelativePath)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </ResolvedFileToPublish>
+      <!-- Add generated file as a Content item, so it gets copied to output. -->
+      <Content Include="%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)" Exclude="@(Content)">
+        <DependentUpon>%(Psd1Template.Filename)%(Psd1Template.Extension)</DependentUpon>
+      </Content>
     </ItemGroup>
   </Target>
 

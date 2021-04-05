@@ -1,0 +1,64 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Copyright 2021 Subatomix Research, Inc.
+
+    Permission to use, copy, modify, and distribute this software for any
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  -->
+
+  <!--
+    This package makes 'dotnet pack' and the Pack command in Visual Studio
+    produce a PowerShell module .nupkg suitable for publishing in a repository.
+
+    Import order:
+    |  Directory.Build.props -> NuGet package .props -> SDK .props -> project
+    |                           ^^^^^^^^here^^^^^^^^
+
+    The accompanying .targets file includes links to reference material.
+  -->
+
+  <PropertyGroup>
+    <!--
+      PowerShell file extensions:
+
+      .ps1      script
+      .psm1     script module
+      .psd1     module manifest or data file
+      .ps1xml   formatting spec or extended type data
+      .pssc     session configuration
+      .psrc     role capability
+      .cdxml    cmdlets that invoke CIM operations
+    -->
+    <PowerShellItemIncludes>**/*.ps1;**/*.psm1;**/*.psd1;**/*.ps1xml;**/*.pssc;**/*.psrc;**/*.cdxml</PowerShellItemIncludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Define the Psd1Template item type -->
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)Psd1Template.xml" />
+
+    <!-- Set the target used to build Psd1Template items -->
+    <AvailableItemName Include="Psd1Template" Targets="GeneratePsd1" />
+  </ItemGroup>
+
+  <ItemDefinitionGroup>
+    <!-- Set default metadata for Psd1Template items -->
+    <Psd1Template CopyToOutputDirectory="Never" />
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <!-- Include .psd1.t files as Psd1Template items by default -->
+    <!-- Needed because MSBuild considers only the .t extension, not .psd1.t -->
+    <Psd1Template Include="**/*.psd1.t" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+</Project>

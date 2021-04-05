@@ -22,6 +22,13 @@
     https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
   -->
 
+  <!--
+    Simulate the Subatomix.ExampleModule project having a reference to the
+    Subatomix.Build.Packaging.PowerShellModule NuGet package
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.targets"
+          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
+
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <None Include="..\icon.png" Link="Properties\icon.png"
           Pack="true" PackagePath="" CopyToOutputDirectory="Never" />
@@ -33,10 +40,6 @@
   <ItemGroup>
     <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
-
-  <!-- Simulate a reference to the package from the test project -->
-  <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.targets"
-          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
 
   <!-- Print source paths of packaged files -->
   <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
