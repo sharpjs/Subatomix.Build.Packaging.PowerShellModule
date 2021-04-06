@@ -40,7 +40,8 @@
 
   <ItemGroup>
     <!-- Include PowerShell files -->
-    <Content Include="$(PowerShellItemIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Content Include="$(PowerShellItemIncludes)"
+             Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
 </Project>

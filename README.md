@@ -22,13 +22,10 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference
-      Include="System.Management.Automation"
-      Version="7.0.3"
-      PrivateAssets="All" />
-    <PackageReference
-      Include="Subatomix.Build.Packaging.PowerShellModule"
-      Version="1.0.0" />
+    <PackageReference Include="System.Management.Automation"
+                      Version="7.0.3" PrivateAssets="All" />
+    <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
+                      Version="1.0.0" />
   </ItemGroup>
 
 </Project>
