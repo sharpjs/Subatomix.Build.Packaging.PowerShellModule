@@ -39,7 +39,7 @@
       .psrc     role capability
       .cdxml    cmdlets that invoke CIM operations
     -->
-    <PowerShellItemIncludes>**/*.ps1;**/*.psm1;**/*.psd1;**/*.ps1xml;**/*.pssc;**/*.psrc;**/*.cdxml</PowerShellItemIncludes>
+    <PowerShellItemIncludes>**/*.ps1;**/*.psm1;**/*.psd1;**/*.ps1xml;**/*.pssc;**/*.psrc;**/*.cdxml;**/*.dll-help.xml</PowerShellItemIncludes>
   </PropertyGroup>
 
   <ItemGroup>
