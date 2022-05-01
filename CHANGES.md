@@ -5,9 +5,12 @@ Most lines should begin with one of these words:
 *Add*, *Fix*, *Update*, *Change*, *Deprecate*, *Remove*.
 
 <!--
-## [Unreleased](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.0..HEAD)
+## [Unreleased](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.1..HEAD)
 (none)
 -->
+
+## [1.1.1](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.0..release/1.1.1)
+- Fix build error when using pre-release .NET SDK versions.
 
 ## [1.1.0](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.0.0..release/1.1.0)
 - Change: PowerShell files are now Content items instead of None items.
