@@ -28,6 +28,8 @@ on:
     branches:
       - master
       - release/*
+  workflow_dispatch:
+    # no options
 
 env:
   # Minimize noise from dotnet CLI
@@ -37,23 +39,25 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    #url: https://github.com/actions/virtual-environments
 
     steps:
       - name: Check Out Code
         uses: actions/checkout@v2
         #url: https://github.com/actions/checkout
 
-      - name: Configure .NET SDK
+      - name: Configure .NET 6.0
         uses: actions/setup-dotnet@v1
         #url: https://github.com/actions/setup-dotnet
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: 6.0.x
 
       - name: Stamp Version
         id: stamp
         run: >
           dotnet build .root.targets -c Release
           -p:StampOnBuild=true
+          -p:SetGitHubActionsVersion=true
           -p:Branch=${{ github.ref }}
           -p:Counter=${{ github.run_number }}
           -p:RepositoryCommit=${{ github.sha }}
@@ -66,7 +70,7 @@ jobs:
           dotnet build --no-restore -c Release
           -p:PackageOutputPath=${{ runner.temp }}/dist
 
-      - name: Save Package
+      - name: Save Packages
         uses: actions/upload-artifact@v2
         #url: https://github.com/actions/upload-artifact
         with:
