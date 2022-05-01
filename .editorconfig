@@ -35,7 +35,7 @@ charset = utf-8-bom
 [*.*proj]
 charset = utf-8-bom
 
-[*.{config,json,jsonc,md,*proj,props,runsettings,targets,xml,yaml,yml}]
+[*.{config,json,jsonc,md,*proj,props,runsettings,targets,*xml,yaml,yml}]
 indent_size = 2
 
 [*.cs]
