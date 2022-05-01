@@ -36,7 +36,7 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
     <PackageReference Include="System.Management.Automation"
                       Version="7.0.0" PrivateAssets="All" />
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
-                      Version="1.1.0" PrivateAssets="All" />
+                      Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
