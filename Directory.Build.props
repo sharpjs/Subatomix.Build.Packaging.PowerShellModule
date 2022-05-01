@@ -1,7 +1,7 @@
 <Project>
 
   <!--
-    Copyright 2021 Subatomix Research, Inc.
+    Copyright 2022 Subatomix Research Inc.
 
     Permission to use, copy, modify, and distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -28,8 +28,8 @@
     <Product>Subatomix.Build.Packaging.PowerShellModule</Product>
     <VersionPrefix>1.1.0</VersionPrefix>
     <Authors>Jeffrey Sharp</Authors>
-    <Company>Subatomix Research, Inc.</Company>
-    <Copyright>© $([System.DateTime]::UtcNow.Year) Subatomix Research Inc.</Copyright>
+    <Company>Subatomix Research Inc.</Company>
+    <Copyright>© $([System.DateTime]::UtcNow.Year) $(Company)</Copyright>
     <PackageLicenseExpression>ISC</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule</PackageProjectUrl>
     <PackageTags>PowerShell Module NuGet Pack MSBuild</PackageTags>

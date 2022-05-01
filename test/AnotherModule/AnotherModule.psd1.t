@@ -1,5 +1,5 @@
 <#
-    Copyright 2021 Subatomix Research, Inc.
+    Copyright 2022 Subatomix Research Inc.
 
     Permission to use, copy, modify, and distribute this software for any
     purpose with or without fee is hereby granted.
