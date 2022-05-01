@@ -26,7 +26,7 @@
   <!-- Descriptive properties -->
   <PropertyGroup>
     <Product>Subatomix.Build.Packaging.PowerShellModule</Product>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.1.1</VersionPrefix>
     <Authors>Jeffrey Sharp</Authors>
     <Company>Subatomix Research Inc.</Company>
     <Copyright>© $([System.DateTime]::UtcNow.Year) $(Company)</Copyright>
