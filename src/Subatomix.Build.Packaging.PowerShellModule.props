@@ -59,6 +59,17 @@
     <!-- Include .psd1.t files as Psd1Template items by default -->
     <!-- Needed because MSBuild considers only the .t extension, not .psd1.t -->
     <Psd1Template Include="**/*.psd1.t" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+
+    <!-- These are the default properties that will be used in the replacement generation of the psd1 -->
+    <Psd1ReplacementProperty Include="VersionPrefix;VersionSuffix;Version;Company;Authors;Copyright;PackageId">
+      <Name>%(Identity)</Name>
+      <Value>$([System.String]::Concat('$(', %(Identity), ')'))</Value>
+    </Psd1ReplacementProperty>
   </ItemGroup>
+
+  <PropertyGroup>
+    <!-- This is the file that gets generated and used for MSBuild property expansion when generating the psd1 -->
+    <GeneratedPropertyImportFile>GeneratedProjectProperties.props</GeneratedPropertyImportFile>
+  </PropertyGroup>
 
 </Project>

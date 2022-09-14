@@ -146,10 +146,54 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="GeneratePsd1PropertiesFile">
+    <PropertyGroup>
+      <_FileHeader>
+<![CDATA[
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>]]>
+      </_FileHeader>
+      <_FileFooter>
+<![CDATA[  </ItemGroup>
+</Project>
+]]>
+      </_FileFooter>
+
+        <_Psd1TemplateHeaderOpen><![CDATA[    <Psd1Template Include="]]></_Psd1TemplateHeaderOpen>
+        <_Psd1TemplateHeaderClose><![CDATA["/>]]></_Psd1TemplateHeaderClose>
+
+        <_ReplacementItemHeaderOpen><![CDATA[    <Psd1Replacement Include="]]></_ReplacementItemHeaderOpen>
+        <_ReplacementItemHeaderClose><![CDATA[">
+]]></_ReplacementItemHeaderClose>
+        <_ReplacementItemNameOpen><![CDATA[      <Name>]]></_ReplacementItemNameOpen>
+        <_ReplacementItemNameClose><![CDATA[</Name>
+]]></_ReplacementItemNameClose>
+        <!--Value>$([MSBuild]::ValueOrDefault(%(Value), ''))</Value-->
+        <_ReplacementItemValueOpen><![CDATA[      <Value>]]></_ReplacementItemValueOpen>
+        <_ReplacementItemValueClose><![CDATA[</Value>
+]]></_ReplacementItemValueClose>
+        <_ReplacementItemFooter><![CDATA[    </Psd1Replacement>]]></_ReplacementItemFooter>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <GeneratedPropertyImportFileFullPath>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)$(GeneratedPropertyImportFile)</GeneratedPropertyImportFileFullPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Psd1ReplacementText Include="@(Psd1Template->'$(_Psd1TemplateHeaderOpen)%(FullPath)$(_Psd1TemplateHeaderClose)')"/>
+      <Psd1ReplacementText Include="@(Psd1ReplacementProperty->'$(_ReplacementItemHeaderOpen)%(Name)$(_ReplacementItemHeaderClose)$(_ReplacementItemNameOpen)%(Name)$(_ReplacementItemNameClose)$(_ReplacementItemValueOpen)%(Value)$(_ReplacementItemValueClose)$(_ReplacementItemFooter)')" />
+    </ItemGroup>
+
+    <WriteLinesToFile File="$(GeneratedPropertyImportFileFullPath)" Lines="$(_FileHeader);@(Psd1ReplacementText);$(_FileFooter)" Overwrite="true"/>
+    
+  </Target>
+
   <!-- Generate .psd1 files from the .psd1.t templates -->
   <Target Name="GeneratePsd1" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true'"
+          DependsOnTargets="GeneratePsd1PropertiesFile"
           Inputs="@(Psd1Template)" Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
-    <WriteLinesToFile
+    <!--WriteLinesToFile
       File="%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)"
       Lines="$(
         [System.IO.File]::ReadAllText('%(Psd1Template.FullPath)')
@@ -158,14 +202,23 @@
           .Replace(`{Copyright}`,     $(Copyright))
       )"
       Overwrite="true"
-    />
+    /-->
+
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)Subatomix.Build.Packaging.GeneratePsd1.targets"
+      Targets="GeneratePsd1File"
+      Properties="RootParentProject=$(MSBuildProjectFullPath);GeneratedPropertyImportFile=$(GeneratedPropertyImportFileFullPath)"
+      RebaseOutputs="true">
+      <Output TaskParameter="TargetOutputs" ItemName="GeneratedPsd1"/>
+    </MSBuild>
+
     <ItemGroup>
       <!-- Enlist generated file to be removed on next Clean. -->
-      <FileWrites Include="%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)" />
+      <FileWrites Include="@(GeneratedPsd1)" />
 
       <!-- Add generated file as a Content item, so it gets copied to output. -->
-      <Content Include="%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)" Exclude="@(Content)">
-        <DependentUpon>%(Psd1Template.Filename)%(Psd1Template.Extension)</DependentUpon>
+      <Content Include="@(GeneratedPsd1)" Exclude="@(Content)">
+        <DependentUpon>%(RecursiveDir)%(Filename)</DependentUpon>
       </Content>
     </ItemGroup>
   </Target>
