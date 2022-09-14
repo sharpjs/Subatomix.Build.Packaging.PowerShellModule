@@ -202,7 +202,7 @@
   <!-- Generate .psd1 files from the .psd1.t templates -->
   <Target Name="GeneratePsd1" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true'"
           DependsOnTargets="GeneratePsd1PropertiesFile"
-          Inputs="@(Psd1Template)" Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
+          Inputs="@(Psd1Template);$(GeneratedPropertyImportFileFullPath)" Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
 
     <!-- We need to invoke an external instance of MSBuild, since there is no simple way to access property values programatically from reflection. -->
     <!-- We'll override some key properties so that this new instance can have a very similar set of properties to the current running build. -->
@@ -232,6 +232,30 @@
         <DependentUpon>%(RecursiveDir)%(Filename)</DependentUpon>
       </Content>
     </ItemGroup>
+  </Target>
+
+  <!-- _CleanGetCurrentAndPriorFileWrites does not count any files outside of IntermediateDir or OutputDir. -->
+  <!-- We must manually add the generated Psd1 to _CleanCurrentFileWrites so it can be properly cleaned -->
+  <Target Name="_CleanAddGeneratedPsd1" 
+    AfterTargets="_CleanGetCurrentAndPriorFileWrites"
+    BeforeTargets="IncrementalClean">
+
+    <ItemGroup>
+      <_CleanCurrentFileWrites Include="@(GeneratedPsd1)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- CoreClean explicitly does not clean items outside of IntermediateDir or OutputDir. -->
+  <!-- We must manually clean those files in oun own target. -->
+  <Target Name="_CleanRemainingItems"
+    AfterTargets="CoreClean">
+
+    <Delete
+      Files="@(_CleanUniqueRemainingFileWrites);$(IntermediateOutputPath)$(CleanFile)" 
+      TreatErrorsAsWarnings="true">
+      <Output TaskParameter="DeletedFiles" ItemName="_CleanPriorFileWritesDeleted" />
+    </Delete>
+
   </Target>
 
   <Target Name="ConfigurePackModule" DependsOnTargets="$(ConfigurePackModuleDependsOn)" />

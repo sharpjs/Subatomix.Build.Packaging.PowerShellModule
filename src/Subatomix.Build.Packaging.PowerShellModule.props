@@ -67,7 +67,7 @@
 
     <!-- These are the default properties that will be used in the replacement generation of the psd1 -->
     <!-- Any additional properties that need to be taken into consideration for replacement need to be added as Psd1ReplacementProperty items -->
-    <Psd1ReplacementProperty Include="VersionPrefix;VersionSuffix;Version;Company;Authors;Copyright;PackageId;PackageProjectUrl;RepositoryUrl;AssemblyName" />
+    <Psd1ReplacementProperty Include="VersionPrefix;VersionSuffix;Version;Company;Authors;Copyright;PackageId;PackageProjectUrl;RepositoryUrl;AssemblyName;Description" />
   </ItemGroup>
 
   <PropertyGroup>
