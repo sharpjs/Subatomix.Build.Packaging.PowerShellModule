@@ -9,6 +9,9 @@ Most lines should begin with one of these words:
 (none)
 -->
 
+## [Unreleased](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.1..HEAD)
+- Updated Psd1 generation to be more extensible and accept more MSBuild Properties. Properties need to be added as item Psd1ReplacementProperty.
+
 ## [1.1.1](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.0..release/1.1.1)
 - Fix build error when using pre-release .NET SDK versions.
 
