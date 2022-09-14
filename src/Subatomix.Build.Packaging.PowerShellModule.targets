@@ -146,7 +146,9 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="GeneratePsd1PropertiesFile">
+  <Target Name="GeneratePsd1PropertiesFile"
+          Inputs="@(Psd1Template);@(Psd1ReplacementProperty)"
+          Outputs="$(IntermediateOutputPath)$(GeneratedPropertyImportFile)">
     <PropertyGroup>
       <_FileHeader>
 <![CDATA[
@@ -180,6 +182,14 @@
       <GeneratedPropertyImportFileFullPath>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)$(GeneratedPropertyImportFile)</GeneratedPropertyImportFileFullPath>
     </PropertyGroup>
 
+    <!-- Generate the Value metadata of the Psd1ReplacementProperty items, since we can't define it in the ItemDefinitionGroup. -->
+    <!-- MSBuild puts the literal text %(Identity) instead of the value of %(Identity) as opposed to defining it in te actual item declaration -->
+    <ItemGroup>
+      <Psd1ReplacementProperty Update="@(Psd1ReplacementProperty)">
+        <Value>$([System.String]::Concat('$(', %(Identity), ')'))</Value>
+      </Psd1ReplacementProperty>
+    </ItemGroup>
+
     <ItemGroup>
       <Psd1ReplacementText Include="@(Psd1Template->'$(_Psd1TemplateHeaderOpen)%(FullPath)$(_Psd1TemplateHeaderClose)')"/>
       <Psd1ReplacementText Include="@(Psd1ReplacementProperty->'$(_ReplacementItemHeaderOpen)%(Name)$(_ReplacementItemHeaderClose)$(_ReplacementItemNameOpen)%(Name)$(_ReplacementItemNameClose)$(_ReplacementItemValueOpen)%(Value)$(_ReplacementItemValueClose)$(_ReplacementItemFooter)')" />
@@ -193,21 +203,22 @@
   <Target Name="GeneratePsd1" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true'"
           DependsOnTargets="GeneratePsd1PropertiesFile"
           Inputs="@(Psd1Template)" Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
-    <!--WriteLinesToFile
-      File="%(Psd1Template.RecursiveDir)%(Psd1Template.Filename)"
-      Lines="$(
-        [System.IO.File]::ReadAllText('%(Psd1Template.FullPath)')
-          .Replace(`{VersionPrefix}`, $(VersionPrefix))
-          .Replace(`{VersionSuffix}`, $(VersionSuffix))
-          .Replace(`{Copyright}`,     $(Copyright))
-      )"
-      Overwrite="true"
-    /-->
+
+    <!-- We need to invoke an external instance of MSBuild, since there is no simple way to access property values programatically from reflection. -->
+    <!-- We'll override some key properties so that this new instance can have a very similar set of properties to the current running build. -->
+    <ItemGroup>
+      <_OverrideProperty Include="RootParentProject=$(MSBuildProjectFullPath)" />
+      <_OverrideProperty Include="GeneratedPropertyImportFile=$(GeneratedPropertyImportFileFullPath)" />
+      <_OverrideProperty Include="AssemblyName=$(AssemblyName)" />
+      <_OverrideProperty Include="RootNamespace=$(RootNamespace)" />
+      <_OverrideProperty Include="Configuration=$(Configuration)" />
+      <_OverrideProperty Include="Platform=$(Platform)" />
+    </ItemGroup>
 
     <MSBuild 
       Projects="$(MSBuildThisFileDirectory)Subatomix.Build.Packaging.GeneratePsd1.targets"
       Targets="GeneratePsd1File"
-      Properties="RootParentProject=$(MSBuildProjectFullPath);GeneratedPropertyImportFile=$(GeneratedPropertyImportFileFullPath)"
+      Properties="@(_OverrideProperty)"
       RebaseOutputs="true">
       <Output TaskParameter="TargetOutputs" ItemName="GeneratedPsd1"/>
     </MSBuild>

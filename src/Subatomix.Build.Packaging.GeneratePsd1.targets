@@ -73,7 +73,7 @@
   </UsingTask>
 
   <Target Name="GeneratePsd1File" Inputs="@(Psd1Template);@(Psd1Replacement)"
-          Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
+          Outputs="@(Psd1Template->'%(RootDir)%(Directory)%(Filename)')">
     
     <ReplacePropertiesInFile Files="@(Psd1Template)" Properties="@(Psd1Replacement)">
       <Output ItemName="GeneratedPsd1" TaskParameter="Result" />
