@@ -199,9 +199,35 @@
     
   </Target>
 
+  <Target Name="_GetNuGetRestoreFiles">
+    <ItemGroup>
+      <!-- For some unknown reason, I need to create a temporary item here so that I can use well-defined metadata to generate new metadata. -->
+      <_NuGetGeneratedFile Include="$(BaseIntermediateOutputPath)$(MSBuildProjectFile).nuget.g.*" />
+      <NuGetGeneratedFile Include="@(_NuGetGeneratedFile)">
+        <FileToLinkTo>%(RelativeDir)Subatomix.Build.Packaging.GeneratePsd1.targets.nuget.g%(Extension)</FileToLinkTo>
+      </NuGetGeneratedFile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="LinkNuGetRestoreOutputsForPsd1Generation"
+          AfterTargets="Restore"
+          DependsOnTargets="_GetNuGetRestoreFiles"
+          Inputs="@(NuGetGeneratedFile)"
+          Outputs="%(NuGetGeneratedFile.FileToLinkTo)">
+    <Copy SourceFiles="@(NuGetGeneratedFile)"
+          DestinationFiles="%(NuGetGeneratedFile.FileToLinkTo)"
+          SkipUnchangedFiles="true"
+          UseSymbolicLinksIfPossible="true">
+      <Output TaskParameter="CopiedFiles" ItemName="LinkedNuGetRestoreFiles"/>
+    </Copy>
+    <Message Text="Linked NuGet RestoreOutputs for Psd1 Generation:" />
+    <Message Text="  @(LinkedNuGetRestoreFiles)" />
+  </Target>
   <!-- Generate .psd1 files from the .psd1.t templates -->
-  <Target Name="GeneratePsd1" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true'"
-          DependsOnTargets="GeneratePsd1PropertiesFile"
+  <Target Name="GeneratePsd1"
+          Condition="'$(DesignTimeBuild)' != 'true'"
+          BeforeTargets="AssignTargetPaths" 
+          DependsOnTargets="GeneratePsd1PropertiesFile;LinkNuGetRestoreOutputsForPsd1Generation"
           Inputs="@(Psd1Template);$(GeneratedPropertyImportFileFullPath)" Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
 
     <!-- We need to invoke an external instance of MSBuild, since there is no simple way to access property values programatically from reflection. -->

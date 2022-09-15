@@ -12,10 +12,18 @@
     <DirectoryBuildPropsPath Condition="'$(_DirectoryBuildPropsBasePath)' != '' and '$(_DirectoryBuildPropsFile)' != ''">$([System.IO.Path]::Combine('$(_DirectoryBuildPropsBasePath)', '$(_DirectoryBuildPropsFile)'))</DirectoryBuildPropsPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="''$(DirectoryBuildTargetsPath)' == ''">
+  <PropertyGroup Condition="'$(DirectoryBuildTargetsPath)' == ''">
     <_DirectoryBuildTargetsFile Condition="'$(_DirectoryBuildTargetsFile)' == ''">Directory.Build.targets</_DirectoryBuildTargetsFile>
     <_DirectoryBuildTargetsBasePath Condition="'$(_DirectoryBuildTargetsBasePath)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(RootParentProjectDirectory), '$(_DirectoryBuildTargetsFile)'))</_DirectoryBuildTargetsBasePath>
     <DirectoryBuildTargetsPath Condition="'$(_DirectoryBuildTargetsBasePath)' != '' and '$(_DirectoryBuildTargetsFile)' != ''">$([System.IO.Path]::Combine('$(_DirectoryBuildTargetsBasePath)', '$(_DirectoryBuildTargetsFile)'))</DirectoryBuildTargetsPath>
+  </PropertyGroup>
+
+  <!-- We need to manually set the MSBuildProjectExtensionsPath so that it resolves relative to the RootParentProject -->
+  <PropertyGroup Condition="'$(MSBuildProjectExtensionsPath)' == ''">
+    <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">obj\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath Condition="!HasTrailingSlash('$(BaseIntermediateOutputPath)')">$(BaseIntermediateOutputPath)\</BaseIntermediateOutputPath>
+
+    <MSBuildProjectExtensionsPath>$(RootParentProjectDirectory)\$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
   </PropertyGroup>
 
   <Import Project="$(RootParentProject)" />
@@ -89,7 +97,9 @@
     </Task>
   </UsingTask>
 
-  <Target Name="GeneratePsd1File" Inputs="@(Psd1Template);@(Psd1Replacement)"
+  <Target Name="GeneratePsd1File"
+          DependsOnTargets="GeneratePowerShellItemLists"
+          Inputs="@(Psd1Template);@(Psd1Replacement)"
           Outputs="@(Psd1Template->'%(RootDir)%(Directory)%(Filename)')">
     
     <ReplacePropertiesInFile Files="@(Psd1Template)" Properties="@(Psd1Replacement)">
