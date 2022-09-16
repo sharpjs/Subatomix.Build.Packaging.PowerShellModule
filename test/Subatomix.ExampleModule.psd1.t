@@ -35,7 +35,7 @@
     # Run On Import
     #ScriptsToProcess = @(...) # Script files (.ps1)    run in caller's environment
     #TypesToProcess   = @(...) # Type   files (.ps1xml) to be loaded
-    #FormatsToProcess = @(...) # Format files (.ps1xml) to be loaded
+    FormatsToProcess = @({PowerShellFormatFiles}) # Format files (.ps1xml) to be loaded
     #NestedModules    = @(...) # Modules to import as nested modules of RootModule
 
     # Exports

@@ -11,6 +11,26 @@ Most lines should begin with one of these words:
 
 ## [Unreleased](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.1..HEAD)
 - Updated Psd1 generation to be more extensible and accept more MSBuild Properties. Properties need to be added as item Psd1ReplacementProperty.
+- Added Auto-generation of Item lists for all different PowerShell file types.
+
+  Items added:
+  `PowerShellScript`, `PowerShellScriptModule`, `PowerShellModuleManifest`, `PowerShellFormat`, `PowerShellType`, `PowerShellSession`, `PowerShellRole`, `PowerShellCIMCmdlet`, `PowerShellHelp`, `PowerShell`
+
+  The final `PowerShell` item includes all PowerShell file types in the current project. This allows for the following inclusion type in the project file:
+
+  ```xml
+  <ItemGroup>
+    <Content Include="$(PowerShell)"/>
+  </ItemGroup>
+  ```
+- Added Example in the Example Project of using `{PowerShellFormatFiles}` to automatically fill in two example format files.
+
+- Added pre-defined properties of PowerShell{FileType} which generate quoted, comma-separated lists of the files of that type.
+  
+  Property Names: 
+    `PowerShellScriptFiles`, `PowerShellScriptModuleFiles`, `PowerShellModuleManifestFiles`, `PowerShellFormatFiles`, `PowerShellTypeFiles`, `PowerShellSessionFiles`, `PowerShellRoleFiles`, `PowerShellCIMCmdletFiles`, `PowerShellHelpFiles`, `PowerShellFiles`
+
+- Proper cleanup of generated psd1 files.
 
 ## [1.1.1](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.0..release/1.1.1)
 - Fix build error when using pre-release .NET SDK versions.

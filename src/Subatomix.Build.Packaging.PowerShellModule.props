@@ -39,8 +39,59 @@
       .psrc     role capability
       .cdxml    cmdlets that invoke CIM operations
     -->
-    <PowerShellItemIncludes>**/*.ps1;**/*.psm1;**/*.psd1;**/*.ps1xml;**/*.pssc;**/*.psrc;**/*.cdxml;**/*.dll-help.xml</PowerShellItemIncludes>
+    <PowerShellScriptIncludes>**/*.ps1</PowerShellScriptIncludes>
+    <PowerShellScriptModuleIncludes>**/*.psm1</PowerShellScriptModuleIncludes>
+    <PowerShellModuleManifestIncludes>**/*.psd1</PowerShellModuleManifestIncludes>
+    <PowerShellFormatIncludes>**/*.format.ps1xml</PowerShellFormatIncludes>
+    <PowerShellTypeIncludes>**/*.type.ps1xml</PowerShellTypeIncludes>
+    <PowerShellSessionIncludes>**/*.pssc</PowerShellSessionIncludes>
+    <PowerShellRoleIncludes>**/*.psrc</PowerShellRoleIncludes>
+    <PowerShellCIMCmdletIncludes>**/*.cdxml</PowerShellCIMCmdletIncludes>
+    <PowerShellHelpIncludes>**/*.dll-help.xml</PowerShellHelpIncludes>
+    <PowerShellItemIncludes>
+      $(PowerShellScriptIncludes);
+      $(PowerShellScriptModuleIncludes);
+      $(PowerShellModuleManifestIncludes);
+      $(PowerShellFormatIncludes);
+      $(PowerShellTypeIncludes);
+      $(PowerShellSessionIncludes);
+      $(PowerShellRoleIncludes);
+      $(PowerShellCIMCmdletIncludes);
+      $(PowerShellHelpIncludes)
+    </PowerShellItemIncludes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PowerShellScript Include="$(PowerShellScriptIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellScript> 
+    <PowerShellScriptModule Include="$(PowerShellScriptModuleIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellScriptModule> 
+    <PowerShellModuleManifest Include="$(PowerShellModuleManifestIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellModuleManifest> 
+    <PowerShellFormat Include="$(PowerShellFormatIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellFormat>
+    <PowerShellType Include="$(PowerShellTypeIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellType>
+    <PowerShellSession Include="$(PowerShellSessionIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellSession>
+    <PowerShellRole Include="$(PowerShellRoleIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellRole>
+    <PowerShellCIMCmdlet Include="$(PowerShellCIMCmdletIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellCIMCmdlet>
+    <PowerShellHelp Include="$(PowerShellHelpIncludes)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+      <Quoted>'%(RecursiveDir)%(Filename)%(Extension)'</Quoted>
+    </PowerShellHelp>
+
+    <PowerShell Include="@(PowerShellScript);@(PowershellScriptModule);@(PowerShellModuleManifest);@(PowerShellFormat);@(PowerShellType);@(PowerShellSession);@(PowerShellRole);@(PowerShellCIMCmdlet);@(PowerShellHelp)" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- Define the Psd1Template item type -->

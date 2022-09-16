@@ -57,6 +57,6 @@
     Subatomix.Build.Packaging.PowerShellModule NuGet package
   -->
   <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.props"
-          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
+          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule' or $(RootParentProject.EndsWith('Subatomix.ExampleModule.csproj'))" />
 
 </Project>

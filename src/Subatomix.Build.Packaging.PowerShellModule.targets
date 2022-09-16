@@ -146,7 +146,59 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="GeneratePowerShellItemLists"
+          BeforeTargets="GeneratePsd1">
+    
+    <PropertyGroup>
+      <PowerShellScriptFiles>@(PowerShellScript->'%(Quoted)', ', ')</PowerShellScriptFiles>
+      <PowerShellScriptModuleFiles>@(PowerShellScriptModule->'%(Quoted)', ', ')</PowerShellScriptModuleFiles>
+      <PowerShellModuleManifestFiles>@(PowerShellModuleManifest->'%(Quoted)', ', ')</PowerShellModuleManifestFiles>
+      <PowerShellFormatFiles>@(PowerShellFormat->'%(Quoted)', ', ')</PowerShellFormatFiles>
+      <PowerShellTypeFiles>@(PowerShellType->'%(Quoted)', ', ')</PowerShellTypeFiles>
+      <PowerShellSessionFiles>@(PowerShellSession->'%(Quoted)', ', ')</PowerShellSessionFiles>
+      <PowerShellRoleFiles>@(PowerShellRole->'%(Quoted)', ', ')</PowerShellRoleFiles>
+      <PowerShellCIMCmdletFiles>@(PowerShellCIMCmdlet->'%(Quoted)', ', ')</PowerShellCIMCmdletFiles>
+      <PowerShellHelpFiles>@(PowerShellHelp->'%(Quoted)', ', ')</PowerShellHelpFiles>
+      <PowerShellFiles>@(PowerShell->'%(Quoted)', ', ')</PowerShellFiles>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Psd1ReplacementProperty Include="PowerShellScriptFiles">
+        <Value>$(PowerShellScriptFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellScriptModuleFiles">
+        <Value>$(PowerShellScriptModuleFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellModuleManifestFiles">
+        <Value>$(PowerShellModuleManifestFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellFormatFiles">
+        <Value>$(PowerShellFormatFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellTypeFiles">
+        <Value>$(PowerShellTypeFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellSessionFiles">
+        <Value>$(PowerShellSessionFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellRoleFiles">
+        <Value>$(PowerShellRoleFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellCIMCmdletFiles">
+        <Value>$(PowerShellCIMCmdletFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellHelpFiles">
+        <Value>$(PowerShellHelpFiles)</Value>
+      </Psd1ReplacementProperty>
+      <Psd1ReplacementProperty Include="PowerShellFiles">
+        <Value>$(PowerShellFiles)</Value>
+      </Psd1ReplacementProperty>
+    </ItemGroup>
+
+  </Target>
+
   <Target Name="GeneratePsd1PropertiesFile"
+          DependsOnTargets="GeneratePowerShellItemLists"
           Inputs="@(Psd1Template);@(Psd1ReplacementProperty)"
           Outputs="$(IntermediateOutputPath)$(GeneratedPropertyImportFile)">
     <PropertyGroup>
@@ -185,7 +237,7 @@
     <!-- Generate the Value metadata of the Psd1ReplacementProperty items, since we can't define it in the ItemDefinitionGroup. -->
     <!-- MSBuild puts the literal text %(Identity) instead of the value of %(Identity) as opposed to defining it in te actual item declaration -->
     <ItemGroup>
-      <Psd1ReplacementProperty Update="@(Psd1ReplacementProperty)">
+      <Psd1ReplacementProperty Update="@(Psd1ReplacementProperty)" Condition="'%(Value)' == ''">
         <Value>$([System.String]::Concat('$(', %(Identity), ')'))</Value>
       </Psd1ReplacementProperty>
     </ItemGroup>
@@ -223,6 +275,7 @@
     <Message Text="Linked NuGet RestoreOutputs for Psd1 Generation:" />
     <Message Text="  @(LinkedNuGetRestoreFiles)" />
   </Target>
+
   <!-- Generate .psd1 files from the .psd1.t templates -->
   <Target Name="GeneratePsd1"
           Condition="'$(DesignTimeBuild)' != 'true'"

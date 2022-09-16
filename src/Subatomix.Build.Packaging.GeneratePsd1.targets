@@ -98,7 +98,6 @@
   </UsingTask>
 
   <Target Name="GeneratePsd1File"
-          DependsOnTargets="GeneratePowerShellItemLists"
           Inputs="@(Psd1Template);@(Psd1Replacement)"
           Outputs="@(Psd1Template->'%(RootDir)%(Directory)%(Filename)')">
     
