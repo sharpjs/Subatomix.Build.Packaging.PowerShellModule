@@ -40,8 +40,7 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="$(PowerShellItemIncludes)"
-             Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Content Include="$(PowerShell)" />
   </ItemGroup>
 
 </Project>
