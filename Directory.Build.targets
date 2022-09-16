@@ -27,7 +27,7 @@
     Subatomix.Build.Packaging.PowerShellModule NuGet package
   -->
   <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.targets"
-          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule' or $(RootParentProject.EndsWith('Subatomix.ExampleModule.csproj'))" />
+          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
 
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <None Include="..\icon.png" Link="Properties\icon.png"

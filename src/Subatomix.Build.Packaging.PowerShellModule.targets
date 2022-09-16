@@ -163,42 +163,43 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Psd1ReplacementProperty Include="PowerShellScriptFiles">
+      <Psd1Replacement Include="PowerShellScriptFiles">
         <Value>$(PowerShellScriptFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellScriptModuleFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellScriptModuleFiles">
         <Value>$(PowerShellScriptModuleFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellModuleManifestFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellModuleManifestFiles">
         <Value>$(PowerShellModuleManifestFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellFormatFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellFormatFiles">
         <Value>$(PowerShellFormatFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellTypeFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellTypeFiles">
         <Value>$(PowerShellTypeFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellSessionFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellSessionFiles">
         <Value>$(PowerShellSessionFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellRoleFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellRoleFiles">
         <Value>$(PowerShellRoleFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellCIMCmdletFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellCIMCmdletFiles">
         <Value>$(PowerShellCIMCmdletFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellHelpFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellHelpFiles">
         <Value>$(PowerShellHelpFiles)</Value>
-      </Psd1ReplacementProperty>
-      <Psd1ReplacementProperty Include="PowerShellFiles">
+      </Psd1Replacement>
+      <Psd1Replacement Include="PowerShellFiles">
         <Value>$(PowerShellFiles)</Value>
-      </Psd1ReplacementProperty>
+      </Psd1Replacement>
+
+      <Psd1Replacement Update="@(Psd1Replacement)" Name="%(Identity)" />
     </ItemGroup>
 
   </Target>
 
   <Target Name="GeneratePsd1PropertiesFile"
-          DependsOnTargets="GeneratePowerShellItemLists"
           Inputs="@(Psd1Template);@(Psd1ReplacementProperty)"
           Outputs="$(IntermediateOutputPath)$(GeneratedPropertyImportFile)">
     <PropertyGroup>
@@ -213,9 +214,6 @@
 </Project>
 ]]>
       </_FileFooter>
-
-        <_Psd1TemplateHeaderOpen><![CDATA[    <Psd1Template Include="]]></_Psd1TemplateHeaderOpen>
-        <_Psd1TemplateHeaderClose><![CDATA["/>]]></_Psd1TemplateHeaderClose>
 
         <_ReplacementItemHeaderOpen><![CDATA[    <Psd1Replacement Include="]]></_ReplacementItemHeaderOpen>
         <_ReplacementItemHeaderClose><![CDATA[">
@@ -243,7 +241,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Psd1ReplacementText Include="@(Psd1Template->'$(_Psd1TemplateHeaderOpen)%(FullPath)$(_Psd1TemplateHeaderClose)')"/>
       <Psd1ReplacementText Include="@(Psd1ReplacementProperty->'$(_ReplacementItemHeaderOpen)%(Name)$(_ReplacementItemHeaderClose)$(_ReplacementItemNameOpen)%(Name)$(_ReplacementItemNameClose)$(_ReplacementItemValueOpen)%(Value)$(_ReplacementItemValueClose)$(_ReplacementItemFooter)')" />
     </ItemGroup>
 
@@ -251,51 +248,23 @@
     
   </Target>
 
-  <Target Name="_GetNuGetRestoreFiles">
-    <ItemGroup>
-      <!-- For some unknown reason, I need to create a temporary item here so that I can use well-defined metadata to generate new metadata. -->
-      <_NuGetGeneratedFile Include="$(BaseIntermediateOutputPath)$(MSBuildProjectFile).nuget.g.*" />
-      <NuGetGeneratedFile Include="@(_NuGetGeneratedFile)">
-        <FileToLinkTo>%(RelativeDir)Subatomix.Build.Packaging.GeneratePsd1.targets.nuget.g%(Extension)</FileToLinkTo>
-      </NuGetGeneratedFile>
-    </ItemGroup>
-  </Target>
-
-  <Target Name="LinkNuGetRestoreOutputsForPsd1Generation"
-          AfterTargets="Restore"
-          DependsOnTargets="_GetNuGetRestoreFiles"
-          Inputs="@(NuGetGeneratedFile)"
-          Outputs="%(NuGetGeneratedFile.FileToLinkTo)">
-    <Copy SourceFiles="@(NuGetGeneratedFile)"
-          DestinationFiles="%(NuGetGeneratedFile.FileToLinkTo)"
-          SkipUnchangedFiles="true"
-          UseSymbolicLinksIfPossible="true">
-      <Output TaskParameter="CopiedFiles" ItemName="LinkedNuGetRestoreFiles"/>
-    </Copy>
-    <Message Text="Linked NuGet RestoreOutputs for Psd1 Generation:" />
-    <Message Text="  @(LinkedNuGetRestoreFiles)" />
-  </Target>
-
   <!-- Generate .psd1 files from the .psd1.t templates -->
   <Target Name="GeneratePsd1"
           Condition="'$(DesignTimeBuild)' != 'true'"
           BeforeTargets="AssignTargetPaths" 
-          DependsOnTargets="GeneratePsd1PropertiesFile;LinkNuGetRestoreOutputsForPsd1Generation"
+          DependsOnTargets="GeneratePsd1PropertiesFile"
           Inputs="@(Psd1Template);$(GeneratedPropertyImportFileFullPath)" Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
 
     <!-- We need to invoke an external instance of MSBuild, since there is no simple way to access property values programatically from reflection. -->
     <!-- We'll override some key properties so that this new instance can have a very similar set of properties to the current running build. -->
     <ItemGroup>
-      <_OverrideProperty Include="RootParentProject=$(MSBuildProjectFullPath)" />
       <_OverrideProperty Include="GeneratedPropertyImportFile=$(GeneratedPropertyImportFileFullPath)" />
-      <_OverrideProperty Include="AssemblyName=$(AssemblyName)" />
-      <_OverrideProperty Include="RootNamespace=$(RootNamespace)" />
       <_OverrideProperty Include="Configuration=$(Configuration)" />
       <_OverrideProperty Include="Platform=$(Platform)" />
     </ItemGroup>
 
     <MSBuild 
-      Projects="$(MSBuildThisFileDirectory)Subatomix.Build.Packaging.GeneratePsd1.targets"
+      Projects="$(MSBuildProjectFullPath)"
       Targets="GeneratePsd1File"
       Properties="@(_OverrideProperty)"
       RebaseOutputs="true">
@@ -308,10 +277,106 @@
 
       <!-- Add generated file as a Content item, so it gets copied to output. -->
       <Content Include="@(GeneratedPsd1)" Exclude="@(Content)">
-        <DependentUpon>%(RecursiveDir)%(Filename)</DependentUpon>
+        <DependentUpon>%(RecursiveDir)%(Filename)%(Extension).t</DependentUpon>
       </Content>
     </ItemGroup>
   </Target>
+
+  <!-- This is the file that is generated by the PowershellModule targets and has the generated properties used for substitution -->
+  <Import Project="$(GeneratedPropertyImportFile)" Condition="Exists($(GeneratedPropertyImportFile))"/>
+
+  <UsingTask TaskName="ReplacePropertiesInFile" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Files ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <CopyToOutputDirectory />
+      <Extension />
+      <Properties ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true"/>
+      <Result ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Using Namespace="System.Linq" />
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+        string regex = @"(?<=[^\$@])\{(?<Property>[A-Za-z0-9]+)\}";
+        if (Files.Length > 0)
+        {
+          // Transform the properties into a dictionary
+          var properties = Properties.ToDictionary(prop => prop.GetMetadata("Name"), prop => prop.GetMetadata("Value"));
+
+          Log.LogMessage(MessageImportance.Low, "Properties to use for replacement:");
+
+          foreach(var prop in properties)
+          {
+            Log.LogMessage(MessageImportance.Low, $"\t{prop.Key} = {prop.Value}");
+          }
+
+          Hashtable metadata = new Hashtable();
+          if(!string.IsNullOrEmpty(CopyToOutputDirectory))
+          {
+            metadata.Add("CopyToOutputDirectory", CopyToOutputDirectory);
+          }
+
+          Result = new TaskItem[Files.Length];
+          uint i = 0;
+          foreach (ITaskItem file in Files)
+          {
+            string filePath = file.GetMetadata("FullPath");
+            string rootDir = file.GetMetadata("RootDir");
+            string recursiveDir = file.GetMetadata("Directory");
+            string fileName = file.GetMetadata("Filename");
+            string newFilePath = rootDir + recursiveDir + fileName + Extension;
+
+            Log.LogMessage(MessageImportance.Low, $"Replacing MSBuild Properties in file: {filePath}");
+
+            using (StreamReader reader = File.OpenText(filePath))
+            {
+              string newFileContents = Regex.Replace(
+                reader.ReadToEnd(),
+                regex,
+                (match) => {
+                  string propertyName = match.Groups["Property"].Value;
+                  string propertyValue = properties.ContainsKey(propertyName) ? properties[propertyName] : string.Empty;
+                  Log.LogMessage(MessageImportance.Low, $"Replacing property: Name<{propertyName}> Value<{propertyValue}>");
+                  return propertyValue;
+                }
+              );
+
+              Log.LogMessage(MessageImportance.Low, $"Writing replaced MSBuild properties to: {newFilePath}");
+
+              using (StreamWriter writer = new StreamWriter(newFilePath))
+              {
+                writer.Write(newFileContents);
+              }
+
+              Result[i++] = new TaskItem(newFilePath, metadata);
+            }
+          }
+        }
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="GeneratePsd1File"
+          DependsOnTargets="GeneratePowerShellItemLists"
+          Returns="@(GeneratedPsd1)">
+    
+    <ReplacePropertiesInFile Files="@(Psd1Template)" 
+                             Properties="@(Psd1Replacement)"
+                             CopyToOutputDirectory="PreserveNewest">
+      <Output ItemName="GeneratedPsd1" TaskParameter="Result" />
+    </ReplacePropertiesInFile>
+
+    <ItemGroup>
+      <GeneratedPsd1 Update="@(GeneratedPsd1)">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </GeneratedPsd1>
+    </ItemGroup>
+    
+
+  </Target>
+
 
   <!-- _CleanGetCurrentAndPriorFileWrites does not count any files outside of IntermediateDir or OutputDir. -->
   <!-- We must manually add the generated Psd1 to _CleanCurrentFileWrites so it can be properly cleaned -->
