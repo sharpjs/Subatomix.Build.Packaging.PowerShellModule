@@ -25,13 +25,17 @@
     <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
-    <IsPublishable>false</IsPublishable>
-    <IsPackable>false</IsPackable>
     <SetGitHubActionsVersion>true</SetGitHubActionsVersion>
+    <DefaultItemExcludesInProjectFolder>
+      src\**;
+      test\**;
+      dist\**;
+      $(DefaultItemExcludesInProjectFolder)
+    </DefaultItemExcludesInProjectFolder>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="**" Exclude="src\**;test\**;dist\**;$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
+    <None Include="**"    Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
     <None Include=".*\**" Exclude=".git\**;.vs\**" />
   </ItemGroup>
 
