@@ -15,7 +15,7 @@ In use by a handful of modules.
 ## Features
 
 - Support for script, binary, or mixed modules
-- Module manifest templates with `{VersionPrefix}`, `{VersionSuffix}`, and `{Copyright}` placeholders
+- Module manifest templates with placeholders that can replace template text any MSBuild defined property
 - Run and debug with F5 in Visual Studio
 - Support for automated build, test, and publish
 
@@ -40,8 +40,7 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="$(PowerShellItemIncludes)"
-             Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Content Include="$(PowerShell)" />
   </ItemGroup>
 
 </Project>

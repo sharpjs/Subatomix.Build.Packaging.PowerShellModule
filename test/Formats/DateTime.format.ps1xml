@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <ViewDefinitions>
+    <View>
+      <Name>DateTime</Name>
+      <ViewSelectedBy>
+        <TypeName>System.DateTime</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Width>4</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Width>2</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Width>2</Width>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Year</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Month</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Day</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>

@@ -15,13 +15,13 @@
 @{
     # Identity
     GUID          = 'ae120094-bc65-4ad6-8550-08d4e7eff79a'
-    RootModule    = 'Subatomix.ExampleModule.psm1'
+    RootModule    = '{PackageId}.psm1'
     ModuleVersion = '{VersionPrefix}'
 
     # General
     Description = 'Example module built with Subatomix.Build.Packaging.PowerShellModule'
-    Author      = 'Jeffrey Sharp'
-    CompanyName = 'Subatomix Research Inc.'
+    Author      = '{Authors}'
+    CompanyName = '{Company}'
     Copyright   = '{Copyright}'
 
     # Requirements
@@ -30,12 +30,12 @@
 
     # Load Before Import
     #RequiredModules   = @()
-    RequiredAssemblies = @('Subatomix.ExampleModule.dll')
+    RequiredAssemblies = @('{AssemblyName}.dll')
 
     # Run On Import
     #ScriptsToProcess = @(...) # Script files (.ps1)    run in caller's environment
     #TypesToProcess   = @(...) # Type   files (.ps1xml) to be loaded
-    #FormatsToProcess = @(...) # Format files (.ps1xml) to be loaded
+    FormatsToProcess = @({PowerShellFormatFiles}) # Format files (.ps1xml) to be loaded
     #NestedModules    = @(...) # Modules to import as nested modules of RootModule
 
     # Exports
@@ -57,10 +57,10 @@
             # Additional metadata
             Prerelease   = '{VersionSuffix}'
             Tags         = @('Subatomix', 'Packaging', 'Example')
-            ProjectUri   = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule'
-            ReleaseNotes = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule.git'
-            LicenseUri   = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/blob/master/LICENSE.txt'
-            IconUri      = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/raw/master/src/icon.png'
+            ProjectUri   = '{PackageProjectUrl}'
+            ReleaseNotes = '{RepositoryUrl}'
+            LicenseUri   = '{PackageProjectUrl}/blob/master/LICENSE.txt'
+            IconUri      = '{PackageProjectUrl}/raw/master/src/icon.png'
 
             # Required modules not hosted in this module's repository
             #ExternalModuleDependencies = @()
