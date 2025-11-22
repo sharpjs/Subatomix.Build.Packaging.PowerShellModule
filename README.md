@@ -48,13 +48,13 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
 ```
 
 For a simple example, see this repository's
-[test project](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/tree/master/test).
+[test project](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/tree/main/test).
 It can serve as a template for new PowerShell module projects.
 For a more complete, real-world example with automated tests, see my
 [PSql](https://github.com/sharpjs/PSql) module.
 
 Ready to automate build-and-publish to PowerShell Gallery?  See this repository's
-[GitHub Actions workflow](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/blob/master/.github/workflows/build.yaml)
+[GitHub Actions workflow](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/blob/main/.github/workflows/build.yaml)
 for an example.
 
 <!--
