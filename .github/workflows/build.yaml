@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MIT
 
 name: Build
+run-name: Build
 
 on:
   push:
@@ -20,6 +21,9 @@ on:
   workflow_dispatch:
     # no options
 
+permissions:
+  contents: write # required by ncipollo/release-action@v1
+
 env:
   # Minimize noise from dotnet CLI
   DOTNET_NOLOGO: 1
@@ -32,14 +36,17 @@ jobs:
 
     steps:
       - name: Check Out Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
         #url: https://github.com/actions/checkout
 
-      - name: Configure .NET 6.0
-        uses: actions/setup-dotnet@v1
+      - name: Configure .NET
+        uses: actions/setup-dotnet@v5
         #url: https://github.com/actions/setup-dotnet
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: |
+            6.0.x
+            8.0.x
+            10.0.x
 
       - name: Stamp Version
         id: stamp
@@ -51,23 +58,39 @@ jobs:
           -p:Counter=${{ github.run_number }}
           -p:RepositoryCommit=${{ github.sha }}
 
+      - name: Publish Version
+        shell: pwsh
+        run: |
+          Add-Content $env:GITHUB_STEP_SUMMARY @"
+          |            |                                   |
+          |:-----------|:----------------------------------|
+          | Version    | ``$env:VERSION``                  |
+          | Branch/Tag | ``$env:GITHUB_REF`` $env:HEAD_REF |
+          | Commit     | ``$env:GITHUB_SHA`` $env:HEAD_SHA |`n`n
+          "@
+        env:
+          VERSION:  ${{ steps.stamp.outputs.version }}
+          HEAD_REF: ${{ github.event.pull_request && format('(head = `{0}`)', github.event.pull_request.head.ref) }}
+          HEAD_SHA: ${{ github.event.pull_request && format('(head = `{0}`)', github.event.pull_request.head.sha) }}
+
       - name: Restore NuGet Packages
         run: dotnet restore
 
       - name: Build
         run: >
           dotnet build --no-restore -c Release
-          -p:PackageOutputPath=${{ runner.temp }}/dist
+          -p:TreatWarningsAsErrors=true
+          -p:PackageOutputPath=${{ runner.temp }}/dist/
 
-      - name: Save Packages
-        uses: actions/upload-artifact@v2
+      - name: Save Package
+        uses: actions/upload-artifact@v4
         #url: https://github.com/actions/upload-artifact
         with:
           name: Packages
           path: ${{ runner.temp }}/dist
           if-no-files-found: error
 
-      - name: Publish NuGet Package
+      - name: Publish Package
         if: startsWith(github.ref, 'refs/tags/release/')
         shell: pwsh
         run: >

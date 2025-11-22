@@ -6,7 +6,6 @@ obj/
 bin/
 /dist/
 /Stamp.props
-/Test.props
 *.psd1
 
 # Visual Studio

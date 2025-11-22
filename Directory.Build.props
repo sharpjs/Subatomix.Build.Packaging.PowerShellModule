@@ -9,7 +9,7 @@
     * Imported early: this -> NuGet package .props -> SDK .props -> project
     * Many properties are not yet defined and behave as if empty.
     * Provide defaults for properties here.
-    https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
   -->
 
   <!-- Descriptive properties -->
@@ -21,21 +21,33 @@
     <Copyright>© $([System.DateTime]::UtcNow.Year) $(Company)</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule</PackageProjectUrl>
-    <PackageTags>PowerShell Module NuGet Pack MSBuild</PackageTags>
+    <PackageProjectUrlRaw>$(PackageProjectUrl.Replace("github", "raw.githubusercontent"))</PackageProjectUrlRaw>
     <PackageReleaseNotes>$(PackageProjectUrl)/blob/master/CHANGES.md</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl>$(PackageProjectUrlRaw)/main/icon.png</PackageIconUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>PowerShell Module NuGet Pack MSBuild</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
     <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
 
+  <!-- Build properties -->
+  <PropertyGroup>
+    <LangVersion>13</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
   <!-- Hide .root project output -->
   <PropertyGroup Condition="'$(MSBuildProjectName)' == '.root'">
     <BaseOutputPath>.vs\.root\bin\</BaseOutputPath>
     <BaseIntermediateOutputPath>.vs\.root\obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
 
-  <!-- Version stamping -->
+  <!-- Version stamping (Subatomix.Build.Versioning.Semantic) -->
   <PropertyGroup>
     <StampFilePath>$(MSBuildThisFileDirectory)Stamp.props</StampFilePath>
   </PropertyGroup>
