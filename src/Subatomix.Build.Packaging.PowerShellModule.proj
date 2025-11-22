@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.Build.NoTargets/3.6.0">
+﻿<Project Sdk="Microsoft.Build.NoTargets/3.7.134">
   <!-- https://github.com/microsoft/MSBuildSdks/tree/main/src/NoTargets -->
 
   <!--
@@ -12,9 +12,6 @@
     <EnableDefaultItems>false</EnableDefaultItems>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <SkipCopyBuildProduct>true</SkipCopyBuildProduct>
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <PropertyGroup>
