@@ -34,7 +34,7 @@
 
   <!-- Build properties -->
   <PropertyGroup>
-    <LangVersion>13</LangVersion>
+    <LangVersion>14</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

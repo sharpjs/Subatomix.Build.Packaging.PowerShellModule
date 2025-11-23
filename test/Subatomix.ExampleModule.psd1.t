@@ -15,7 +15,7 @@
 
     # Requirements
     CompatiblePSEditions = 'Core'
-    PowerShellVersion    = '7.0'
+    PowerShellVersion    = '7.4'
 
     # Load Before Import
     #RequiredModules   = @()

@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <Description>Example module built with Subatomix.Build.Packaging.PowerShellModule</Description>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
@@ -23,10 +23,10 @@
       following PackageReference and populate its Version attribute.
 
       <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
-                        Version="..." PrivateAssets="All "/>
+                        Version="..." PrivateAssets="all "/>
     -->
     <PackageReference Include="System.Management.Automation"
-                      Version="7.0.0" PrivateAssets="All" />
+                      Version="7.4.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
