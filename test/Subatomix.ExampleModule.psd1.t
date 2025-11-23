@@ -48,8 +48,8 @@
             Tags         = @('Subatomix', 'Packaging', 'Example')
             ProjectUri   = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule'
             ReleaseNotes = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule.git'
-            LicenseUri   = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/blob/main/LICENSE.txt'
-            IconUri      = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/raw/main/src/icon.png'
+            LicenseUri   = 'https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/blob/main/test/LICENSE.txt'
+            #IconUri     = 'https://raw.githubusercontent.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/refs/heads/main/test/icon.png'
 
             # Required modules not hosted in this module's repository
             #ExternalModuleDependencies = @()
