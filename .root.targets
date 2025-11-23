@@ -11,6 +11,8 @@
     <EnableDefaultItems>false</EnableDefaultItems>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <IsPublishable>false</IsPublishable>
+    <IsPackable>false</IsPackable>
     <DefaultItemExcludesInProjectFolder>
       src\**;
       test\**;
