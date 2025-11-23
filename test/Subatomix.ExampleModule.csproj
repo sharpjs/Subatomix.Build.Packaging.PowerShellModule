@@ -12,11 +12,6 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- CS1591: Missing XML comment for publicly visible type or member -->
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
     <!--
       When using this file as a template for other projects, uncomment the
