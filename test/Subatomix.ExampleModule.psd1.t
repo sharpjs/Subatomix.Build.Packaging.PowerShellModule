@@ -29,7 +29,7 @@
 
     # Exports
     # NOTE: Use @() (empty array) to indicate no exports.
-    #       Use '*' (star string) to indicate everything exported.
+    #       Use '*' (star string) to export everything.
     FunctionsToExport = @(
         'Test-PowerShellModulePackaging'
     )
