@@ -2,7 +2,8 @@
 
   <!--
     Copyright Subatomix Research Inc.
-    SPDX-License-Identifier: MIT
+    SPDX-License-Identifier: MIT-0
+    ^ Remove this header when using this file as a template in other projects.
   -->
 
   <PropertyGroup>
@@ -19,7 +20,7 @@
 
   <ItemGroup>
     <!--
-      When using this file as a template for new projects, uncomment the
+      When using this file as a template for other projects, uncomment the
       following PackageReference and populate its Version attribute.
 
       <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
@@ -33,6 +34,17 @@
     <!-- Include PowerShell files -->
     <Content Include="$(PowerShellItemIncludes)"
              Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      To add a module icon, uncomment the following item and add an icon file.
+      PS Gallery docs specify "85x85 image with transparency background".
+
+      <None Include="icon.png" Pack="true" PackagePath="" />
+    -->
+    <None Include="LICENSE.txt" Pack="true" PackagePath="" />
+    <None Include="README.md"   Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

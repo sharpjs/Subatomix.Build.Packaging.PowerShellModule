@@ -1,5 +1,6 @@
 # Copyright Subatomix Research Inc.
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: MIT-0
+# ^ Remove this header when using this file as a template in other projects.
 @{
     # Identity
     GUID          = 'ae120094-bc65-4ad6-8550-08d4e7eff79a'
