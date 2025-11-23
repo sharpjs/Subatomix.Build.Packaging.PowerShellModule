@@ -41,6 +41,14 @@
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
+
+  <!-- Packaging properties -->
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>..\dist\</PackageOutputPath>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
   <!-- Hide .root project output -->
   <PropertyGroup Condition="'$(MSBuildProjectName)' == '.root'">
     <BaseOutputPath>.vs\.root\bin\</BaseOutputPath>
