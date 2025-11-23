@@ -29,7 +29,8 @@
 
   <!-- Versioning -->
   <ItemGroup>
-    <PackageReference Include="Subatomix.Build.Versioning.Semantic" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Subatomix.Build.Versioning.Semantic"
+                      Version="1.1.0" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Print source paths of packaged files -->
