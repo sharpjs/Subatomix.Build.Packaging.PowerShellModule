@@ -83,11 +83,11 @@ jobs:
           -p:TreatWarningsAsErrors=true
           -p:PackageOutputPath=${{ runner.temp }}/dist/
 
-      - name: Save Package
-        uses: actions/upload-artifact@v4
+      - name: Save Distributables
+        uses: actions/upload-artifact@v5
         #url: https://github.com/actions/upload-artifact
         with:
-          name: Packages
+          name: Distributables
           path: ${{ runner.temp }}/dist
           if-no-files-found: error
 
