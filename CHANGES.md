@@ -4,10 +4,10 @@ This file documents all notable changes.
 Most lines should begin with one of these words:
 *Add*, *Fix*, *Update*, *Change*, *Deprecate*, *Remove*.
 
-<!--
 ## [Unreleased](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.1..HEAD)
-(none)
--->
+- Change license to MIT for most content.
+- Change license to MIT No Attribution (MIT-0) for the example module.
+- Fix build error when using .NET 10 SDK.
 
 ## [1.1.1](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.0..release/1.1.1)
 - Fix build error when using pre-release .NET SDK versions.
