@@ -36,7 +36,8 @@
   <!-- Print source paths of packaged files -->
   <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
     <Message Importance="high"
-             Text="_PackageFiles: %(_PackageFiles.PackagePath)\%(_PackageFiles.Filename)%(_PackageFiles.Extension)" />
+             Text="_PackageFiles: %(_PackageFiles.NuGetRecursiveDir)%(_PackageFiles.Filename)%(_PackageFiles.Extension)" />
+    <!-- NuGetRecursiveDir is a workaround for bug https://github.com/dotnet/msbuild/issues/3121 -->
   </Target>
 
 </Project>
