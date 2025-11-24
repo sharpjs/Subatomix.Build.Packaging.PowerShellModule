@@ -28,13 +28,13 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Management.Automation"
-                      Version="7.0.0" PrivateAssets="All" />
+                      Version="7.4.0" PrivateAssets="All" />
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
                       Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
