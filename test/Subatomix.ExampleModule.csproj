@@ -31,12 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--
-      To add a module icon, uncomment the following item and add an icon file.
-      PS Gallery docs specify "85x85 image with transparency background".
-
-      <None Include="icon.png" Pack="true" PackagePath="" />
-    -->
+    <None Include="icon.png"    Pack="true" PackagePath="" />
     <None Include="LICENSE.txt" Pack="true" PackagePath="" />
     <None Include="README.md"   Pack="true" PackagePath="" />
   </ItemGroup>
