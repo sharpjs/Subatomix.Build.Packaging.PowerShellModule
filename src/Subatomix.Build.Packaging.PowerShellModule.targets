@@ -16,30 +16,21 @@
     REFERENCES
 
     Customize your build
-    https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
 
     Common MSBuild project properties
-    https://docs.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
 
     MSBuild well-known item metadata
-    https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata
 
     Item functions
-    https://docs.microsoft.com/en-us/visualstudio/msbuild/item-functions?view=vs-2019
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/item-functions
 
     NuGet pack and restore as MSBuild targets
-    https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets (specifically, #targetsfortfmspecificcontentinpackage)
+    https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets (specifically, #targetsfortfmspecificcontentinpackage)
     https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.props
     https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets
-
-    ResolveToolPackagePaths task
-    https://github.com/dotnet/sdk/blob/v3.1.404/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets
-    https://github.com/dotnet/sdk/blob/v3.1.404/src/Tasks/Microsoft.NET.Build.Tasks/ResolveToolPackagePaths.cs
-    https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets
-    https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/ResolveToolPackagePaths.cs
-
-    ResolvedFileToPublish property
-    https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets
 
     Up-to-date check
     https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md
@@ -173,37 +164,20 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="ConfigurePackPublishedFile"
-          DependsOnTargets="
-            _ConfigurePackPublishedFilesNetCore;
-            _ConfigurePackPublishedFilesSinceNet5
-          ">
+  <Target Name="ConfigurePackPublishedFile" DependsOnTargets="PublishForPack">
     <ItemGroup>
-      <!-- Remove 'tools/all/any/' prefix (length 14) from package paths -->
-      <TfmSpecificPackageFile Include="@(_ResolvedFileToPublishWithPackagePath)">
-        <PackagePath>$([System.String]::Copy('%(_ResolvedFileToPublishWithPackagePath.PackagePath)').Substring(14))</PackagePath>
+      <TfmSpecificPackageFile Include="$(PublishDir)/**/*">
+        <!--
+          NuGet packing appends RecursiveDir to PackagePath, and the publish
+          output already has the desired layout when this target runs.  Thus,
+          keep PackagePath empty and rely on RecursiveDir to preserve layout.
+          This is how Microsoft does it as of .NET 10 SDK:
+          https://github.com/dotnet/sdk/blob/v10.0.100/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets#L201
+          https://github.com/dotnet/sdk/blob/v10.0.100/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets#L214-L219
+        -->
+        <PackagePath></PackagePath>
       </TfmSpecificPackageFile>
     </ItemGroup>
-  </Target>
-
-  <Target Name="_ConfigurePackPublishedFilesNetCore" DependsOnTargets="PublishForPack"
-          Condition="$([MSBuild]::VersionLessThan($(NETCoreSdkVersion), 5.0))">
-    <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
-                             PublishDir="$(PublishDir)"
-                             TargetFramework="all">
-      <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
-              ItemName="_ResolvedFileToPublishWithPackagePath" />
-    </ResolveToolPackagePaths>
-  </Target>
-
-  <Target Name="_ConfigurePackPublishedFilesSinceNet5" DependsOnTargets="PublishForPack"
-          Condition="$([MSBuild]::VersionGreaterThanOrEquals($(NETCoreSdkVersion), 5.0))">
-    <ResolveToolPackagePaths ResolvedFileToPublish="@(ResolvedFileToPublish)"
-                             PublishDir="$(PublishDir)"
-                             TargetFrameworkMoniker="all">
-      <Output TaskParameter="ResolvedFileToPublishWithPackagePath"
-              ItemName="_ResolvedFileToPublishWithPackagePath" />
-    </ResolveToolPackagePaths>
   </Target>
 
   <!--

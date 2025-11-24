@@ -29,6 +29,14 @@
       .cdxml    cmdlets that invoke CIM operations
     -->
     <PowerShellItemIncludes>**/*.ps1;**/*.psm1;**/*.psd1;**/*.ps1xml;**/*.pssc;**/*.psrc;**/*.cdxml;**/*.dll-help.xml</PowerShellItemIncludes>
+
+    <!--
+      .NET 10+ creates runtime-identifier-specific tool packages by default,
+      but PowerShell modules should not be RID-specific.
+      https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/10.0/dotnet-tool-pack-publish
+    -->
+    <CreateRidSpecificToolPackages>false</CreateRidSpecificToolPackages>
+    <UseAppHost>false</UseAppHost>
   </PropertyGroup>
 
   <ItemGroup>
