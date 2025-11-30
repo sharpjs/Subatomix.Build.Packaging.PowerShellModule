@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11217.181 d18.0
+VisualStudioVersion = 18.0.11217.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = ".root", ".root.targets", "{9A40377D-90CC-45B2-85DD-9939C33E8D56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.Build.Packaging.PowerShellModule", "src\Subatomix.Build.Packaging.PowerShellModule.proj", "{21830F93-D46D-4617-B9F3-EFA8E2DA04AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.ExampleModule", "test\Subatomix.ExampleModule.csproj", "{3D30AE59-62F8-4BCF-A490-F07849F39AB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.ExampleModule", "test\current\Subatomix.ExampleModule.csproj", "{3D30AE59-62F8-4BCF-A490-F07849F39AB4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{21830F93-D46D-4617-B9F3-EFA8E2DA04AD} = {21830F93-D46D-4617-B9F3-EFA8E2DA04AD}
 	EndProjectSection

@@ -1,0 +1,22 @@
+<Project>
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT
+  -->
+
+  <!--
+    * Imported late: project -> SDK .targets -> NuGet package .targets -> this
+    * Override properties and targets here.
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
+  -->
+
+  <!--
+    Simulate the Subatomix.ExampleModule project having a reference to the
+    Subatomix.Build.Packaging.PowerShellModule NuGet package
+  -->
+  <Import Project="..\src\Subatomix.Build.Packaging.PowerShellModule.targets" />
+
+  <Import Project="..\Directory.Build.targets" />
+
+</Project>

@@ -11,14 +11,7 @@
     https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
   -->
 
-  <!--
-    Simulate the Subatomix.ExampleModule project having a reference to the
-    Subatomix.Build.Packaging.PowerShellModule NuGet package
-  -->
-  <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.targets"
-          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
-
-  <ItemGroup Condition="'$(IsPackable)' == 'true' And '$(MSBuildProjectName)' != 'Subatomix.ExampleModule'">
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <None Include="..\icon.png" LinkBase="Properties"
           Pack="true" PackagePath="" CopyToOutputDirectory="Never" />
     <None Include="..\LICENSE.txt" LinkBase="Properties"

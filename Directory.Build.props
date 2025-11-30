@@ -34,7 +34,6 @@
 
   <!-- Build properties -->
   <PropertyGroup>
-    <LangVersion>14</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -60,12 +59,5 @@
     <StampFilePath>$(MSBuildThisFileDirectory)Stamp.props</StampFilePath>
   </PropertyGroup>
   <Import Project="$(StampFilePath)" Condition="Exists('$(StampFilePath)')"/>
-
-  <!--
-    Simulate the Subatomix.ExampleModule project having a reference to the
-    Subatomix.Build.Packaging.PowerShellModule NuGet package
-  -->
-  <Import Project="$(MSBuildThisFileDirectory)src\Subatomix.Build.Packaging.PowerShellModule.props"
-          Condition="'$(MSBuildProjectName)' == 'Subatomix.ExampleModule'" />
 
 </Project>

@@ -22,8 +22,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="**"    Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
-    <None Include=".*\**" Exclude=".git\**;.vs\**;.vscode\**" />
+    <None Include="**"      Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
+    <None Include=".*\**"   Exclude=".git\**;.vs\**;.vscode\**" />
+    <None Include="test\**" Exclude="test\current\**" />
   </ItemGroup>
 
 </Project>

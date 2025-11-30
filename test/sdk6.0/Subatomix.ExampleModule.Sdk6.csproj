@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <Description>Example module built with Subatomix.Build.Packaging.PowerShellModule</Description>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
@@ -21,19 +21,13 @@
                         Version="..." PrivateAssets="all "/>
     -->
     <PackageReference Include="System.Management.Automation"
-                      Version="7.4.0" PrivateAssets="all" />
+                      Version="7.2.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Include PowerShell files -->
     <Content Include="$(PowerShellItemIncludes)"
              Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="icon.png"    Pack="true" PackagePath="" />
-    <None Include="LICENSE.txt" Pack="true" PackagePath="" />
-    <None Include="README.md"   Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

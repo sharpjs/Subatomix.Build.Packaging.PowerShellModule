@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT-0
+    ^ Remove this header when using this file as a template in other projects.
+  -->
+
+  <PropertyGroup>
+    <Description>Example module built with Subatomix.Build.Packaging.PowerShellModule</Description>
+    <TargetFramework>net8.0</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      When using this file as a template for other projects, uncomment the
+      following PackageReference and populate its Version attribute.
+
+      <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
+                        Version="..." PrivateAssets="all "/>
+    -->
+    <PackageReference Include="System.Management.Automation"
+                      Version="7.4.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Include PowerShell files -->
+    <Content Include="$(PowerShellItemIncludes)"
+             Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+</Project>
