@@ -48,7 +48,7 @@ will produce a PowerShell module.  Here is a minimal example `.csproj` file:
 ```
 
 For a simple example, see this repository's
-[test project](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/tree/main/test).
+[test project](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/tree/main/test/current).
 It can serve as a template for new PowerShell module projects.
 For a more complete, real-world example with automated tests, see my
 [PSql](https://github.com/sharpjs/PSql) module.
