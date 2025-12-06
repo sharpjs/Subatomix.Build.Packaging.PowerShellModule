@@ -1,0 +1,118 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT
+  -->
+
+  <UsingTask TaskName="Subatomix.Build.Packaging.PowerShellModule.GeneratePsd1"
+             AssemblyFile="Subatomix.Build.Packaging.PowerShellModule.dll"
+             Condition="'$(DesignTimeBuild)' != 'true'" />
+
+  <PropertyGroup>
+    <CoreBuildDependsOn>
+      GeneratePsd1;
+      $(CoreBuildDependsOn)
+    </CoreBuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GeneratePsd1" BeforeTargets="AssignTargetPaths"
+          Condition="'$(DesignTimeBuild)' != 'true' And !Exists('$(PackageId).psd1.t')"
+          Inputs="$(MSBuildProjectFile)" Outputs="$(PackageId).psd1">
+
+    <PropertyGroup>
+      <!--
+        Default RootModule as appropriate for the detected module type.
+      -->
+      <RootModule Condition="'$(RootModule)' == '' And Exists('$(PackageId).psm1')"
+                  >$(PackageId).psm1</RootModule>
+      <RootModule Condition="'$(RootModule)' == '' And '$(IncludeBuildOutput)' == 'true'"
+                  >$(AssemblyName)$(TargetExt)</RootModule>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!--
+        If the compiled assembly is included in the module, ensure it will be
+        loaded when the module is imported.
+      -->
+      <RequiredAssemblies Include="$(AssemblyName)$(TargetExt)"
+                          Exclude="@(RequiredAssemblies)"
+                          Condition="
+                            '$(RootModule)' != '$(AssemblyName)$(TargetExt)' And
+                            '$(IncludeBuildOutput)' == 'true'
+                          " />
+
+      <!--
+        Convert PackageTags from a property to items
+      -->
+      <_ModuleTags Include="$(PackageTags
+                    .Replace(';', ' ')
+                    .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                   )" />
+
+      <!-- 
+        Compute which module references are external
+        Reference: https://github.com/OneGet/oneget/issues/164#issuecomment-173436617
+      -->
+      <_ExternalModuleDependencies Include="@(RequiredModules)" Exclude="@(_ExternalModuleDependencies)"
+                                   Condition="'%(External)' == 'true'" />
+      <_ExternalModuleDependencies Include="@(NestedModules)" Exclude="@(_ExternalModuleDependencies)"
+                                   Condition="'%(External)' == 'true'" />
+    </ItemGroup>
+
+    <GeneratePsd1
+      FileName                   = "$(PackageId).psd1"
+      ModuleGuid                 = "$(ModuleGuid)"
+      RootModule                 = "$(RootModule)"
+      VersionPrefix              = "$(VersionPrefix)"
+      VersionSuffix              = "$(VersionSuffix)"
+
+      Description                = "$(Description)"
+      Author                     = "$(Authors)"
+      Company                    = "$(Company)"
+      Copyright                  = "$(Copyright)"
+
+      ProjectUri                 = "$(PackageProjectUrl)"
+      LicenseExpression          = "$(PackageLicenseExpression)"
+      LicenseUri                 = "$(ModuleLicenseUrl)"
+      RequireLicenseAcceptance   = "$(PackageRequireLicenseAcceptance)"
+      IconUri                    = "$(PackageIconUrl)"
+      ReleaseNotes               = "$(PackageReleaseNotes)"
+      Tags                       = "@(_ModuleTags)"
+
+      CompatibleEditions         = "@(CompatiblePSEditions)"
+      PowerShellVersion          = "$(MinimumPowerShellVersion)"
+      PowerShellHostName         = "$(RequiredPowerShellHostName)"
+      PowerShellHostVersion      = "$(MinimumPowerShellHostVersion)"
+      DotNetFrameworkVersion     = "$(MinimumDotNetFrameworkVersion)"
+      ClrVersion                 = "$(MinimumClrVersion)"
+      ProcessorArchitecture      = "$(RequiredProcessorArchitecture)"
+
+      RequiredModules            = "@(RequiredModules)"
+      RequiredAssemblies         = "@(RequiredAssemblies)"
+
+      TypesToProcess             = "@(TypesToProcess)"
+      FormatsToProcess           = "@(FormatsToProcess)"
+      ScriptsToProcess           = "@(ScriptsToProcess)"
+      NestedModules              = "@(NestedModules)"
+
+      CmdletsToExport            = "@(CmdletsToExport)"
+      FunctionsToExport          = "@(FunctionsToExport)"
+      AliasesToExport            = "@(AliasesToExport)"
+      VariablesToExport          = "@(VariablesToExport)"
+      DscResourcesToExport       = "@(DscResourcesToExport)"
+      DefaultCommandPrefix       = "$(DefaultCommandPrefix)"
+
+      ExternalModuleDependencies = "@(_ExternalModuleDependencies)"
+    />
+
+    <ItemGroup>
+      <!-- Enlist generated file to be removed on next Clean -->
+      <FileWrites Include="$(PackageId).psd1" />
+
+      <!-- Add generated file as a Content item, so it gets copied to output -->
+      <Content Include="$(PackageId).psd1" Exclude="@(Content)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

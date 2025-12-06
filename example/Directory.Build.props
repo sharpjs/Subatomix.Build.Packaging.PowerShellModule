@@ -1,0 +1,38 @@
+<Project>
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT
+  -->
+
+  <!--
+    * Imported early: this -> NuGet package .props -> SDK .props -> project
+    * Many properties are not yet defined and behave as if empty.
+    * Provide defaults for properties here.
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
+  -->
+
+  <!-- Inherit from parent directory -->
+  <Import Project="..\Directory.Build.props" />
+
+  <!-- Descriptive properties -->
+  <PropertyGroup>
+    <ModuleLicenseUrl>$(PackageProjectUrl)/blob/main/icon.png</ModuleLicenseUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/blob/main/example/CHANGES.md</PackageReleaseNotes>
+    <PackageIconUrl>$(PackageProjectUrlRaw)/main/example/icon.png</PackageIconUrl>
+    <PackageLicenseExpression>MIT-0</PackageLicenseExpression>
+    <PackageTags>Subatomix Packaging Example</PackageTags>
+  </PropertyGroup>
+
+  <!-- Packaging properties -->
+  <PropertyGroup>
+    <PackageOutputPath>..\..\dist\</PackageOutputPath>
+  </PropertyGroup>
+
+  <!--
+    Simulate the Subatomix.ExampleModule project having a reference to the
+    Subatomix.Build.Packaging.PowerShellModule NuGet package
+  -->
+  <Import Project="..\Subatomix.Build.Packaging.PowerShellModule\bin\$(Configuration)\build\Subatomix.Build.Packaging.PowerShellModule.props" />
+
+</Project>

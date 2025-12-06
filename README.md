@@ -1,8 +1,6 @@
 # Subatomix.Build.Packaging.PowerShellModule
 
-PowerShell module packaging support for .NET
-[SDK-style](https://docs.microsoft.com/en-us/dotnet/core/tools/csproj)
-projects.
+PowerShell module packaging support for .NET [SDK-style][sdk] projects.
 
 ## Status
 
@@ -10,52 +8,62 @@ projects.
 [![NuGet](https://img.shields.io/nuget/v/Subatomix.Build.Packaging.PowerShellModule.svg)](https://www.nuget.org/packages/Subatomix.Build.Packaging.PowerShellModule)
 [![NuGet](https://img.shields.io/nuget/dt/Subatomix.Build.Packaging.PowerShellModule.svg)](https://www.nuget.org/packages/Subatomix.Build.Packaging.PowerShellModule)
 
-In use by a handful of modules.
+In use by a few modules.
 
 ## Features
 
-- Support for script, binary, or mixed modules
-- Module manifest templates with `{VersionPrefix}`, `{VersionSuffix}`, and `{Copyright}` placeholders
-- Run and debug with F5 in Visual Studio
-- Support for automated build, test, and publish
+- Support for binary, script, and manifest modules.
+- Module manifest (`.psd1`) generation from project properties.
+- Custom module manifest generation from templates.
+- Run and debug in Visual Studio or other IDE.
+- Publish to the [PowerShell Gallery][psg] with `dotnet nuget push`.
 
 ## Usage
 
-Just add a reference to this package.  Now `dotnet pack` and Visual Studio Pack
-will produce a PowerShell module.  Here is a minimal example `.csproj` file:
+It's not difficult.  Add a couple project references and set some project
+properties, and `dotnet pack` (or Visual Studio's Pack feature) will produce a
+PowerShell module ready for publishing to the [PowerShell Gallery][psg].
+
+See the [usage guide][ug] for full details.
+
+A C# project file targeting PowerShell 7.4 or later might look like this:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Management.Automation"
                       Version="7.4.0" PrivateAssets="All" />
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
-                      Version="1.2.0" PrivateAssets="All" />
+                      Version="2.0.0" PrivateAssets="All" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <Description>My PowerShell module.</Description>
+    <Authors>My Name</Authors>
+    <Copyright>© My Name</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://example.com</PackageProjectUrl>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Content Include="$(PowerShellItemIncludes)"
-             Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <CmdletsToExport Include="New-ExampleThing" />
+    <CmdletsToExport Include="Get-ExampleThing" />
+    <CmdletsToExport Include="Remove-ExampleThing" />
   </ItemGroup>
 
 </Project>
 ```
 
-For a simple example, see this repository's
-[test project](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/tree/main/test/current).
-It can serve as a template for new PowerShell module projects.
-For a more complete, real-world example with automated tests, see my
-[PSql](https://github.com/sharpjs/PSql) module.
+<!------------------------------------------------------------------------------------------------>
 
-Ready to automate build-and-publish to PowerShell Gallery?  See this repository's
-[GitHub Actions workflow](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/blob/main/.github/workflows/build.yaml)
-for an example.
+[psg]: https://www.powershellgallery.com/
+[sdk]: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj
+[ug]:  https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/tree/main/doc/Guide.md
 
 <!--
   Copyright Subatomix Research Inc.

@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT-0
+    ^ Remove this header when using this file as a template in other projects.
+  -->
+
+  <PropertyGroup>
+    <Description>Example script module built with Subatomix.Build.Packaging.PowerShellModule</Description>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageOutputPath>..\..\dist\sdk6.0\</PackageOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
+                      Version="..." PrivateAssets="all" />
+    <PackageReference Include="System.Management.Automation"
+                      Version="7.2.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Properties for module manifest generation -->
+  <PropertyGroup>
+    <!--
+      Already defined in Directory.Build.props:
+
+      <VersionPrefix>...</VersionPrefix>
+      <Authors>...</Authors>
+      <Company>...</Company>
+      <Copyright>...</Copyright>
+
+      <PackageProjectUrl>...</PackageProjectUrl>
+      <PackageLicenseExpression>...</PackageLicenseExpression>
+      <ModuleLicenseUrl>...</ModuleLicenseUrl>
+      <PackageIconUrl>...</PackageIconUrl>
+      <PackageReleaseNotes>...</PackageReleaseNotes>
+      <PackageTags>...</PackageTags>
+    -->
+    <ModuleGuid>c434a3cb-40d3-43c6-812d-7747a373ba37</ModuleGuid>
+    <MinimumPowerShellVersion>7.2</MinimumPowerShellVersion>
+    <PackageTags>PowerShell Module Examples</PackageTags>
+  </PropertyGroup>
+
+  <!-- Items for module manifest generation -->
+  <ItemGroup>
+    <CompatiblePSEditions Include="Core" />
+    <FunctionsToExport Include="Test-ModulePackaging" />
+  </ItemGroup>
+
+  <!-- Items for module manifest templating -->
+  <ItemGroup>
+    <Psd1Replacement Include="Foo" Value="Bar" />
+  </ItemGroup>
+
+  <!-- Shared items -->
+  <ItemGroup>
+    <!--
+      Already included by Directory.Build.targets:
+
+      <None Include="..\icon.png" ... />
+      <None Include="..\LICENSE.txt" ... />
+      <None Include="..\README.md" ... />
+    -->
+  </ItemGroup>
+
+</Project>

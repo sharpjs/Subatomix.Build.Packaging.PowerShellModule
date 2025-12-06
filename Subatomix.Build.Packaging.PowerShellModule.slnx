@@ -1,0 +1,17 @@
+<Solution>
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT
+  -->
+  <Project Path=".root.targets" Type="C#">
+    <Build Project="false" />
+  </Project>
+  <Project Path="Subatomix.Build.Packaging.PowerShellModule\Subatomix.Build.Packaging.PowerShellModule.csproj" />
+  <Project Path="Subatomix.Build.Packaging.PowerShellModule.Tests\Subatomix.Build.Packaging.PowerShellModule.Tests.csproj" />
+  <Project Path="example\current-binary\Subatomix.ExampleModule.csproj">
+    <BuildDependency Project="Subatomix.Build.Packaging.PowerShellModule\Subatomix.Build.Packaging.PowerShellModule.csproj" />
+  </Project>
+  <Project Path="example\current-script\Subatomix.ExampleModule.Script.csproj">
+    <BuildDependency Project="Subatomix.Build.Packaging.PowerShellModule\Subatomix.Build.Packaging.PowerShellModule.csproj" />
+  </Project>
+</Solution>

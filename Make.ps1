@@ -18,15 +18,41 @@ param (
     [Parameter(Mandatory, ParameterSetName="Build")]
     [switch] $Build
 ,
+    # Build, run tests.
+    [Parameter(ParameterSetName="Test")]
+    [switch] $Test
+,
+    # Build, run tests, produce code coverage report.
+    [Parameter(Mandatory, ParameterSetName="Coverage")]
+    [switch] $Coverage
+,
+    # Show the coverage report in the defualt browser.
+    [Parameter(ParameterSetName="Coverage")]
+    [switch] $Show
+,
+    # Do not build before running tests.
+    [Parameter(ParameterSetName="Test")]
+    [Parameter(ParameterSetName="Coverage")]
+    [switch] $NoBuild
+,
     # The configuration to build: Debug or Release.  The default is Debug.
     [Parameter(ParameterSetName="Build")]
+    [Parameter(ParameterSetName="Test")]
+    [Parameter(ParameterSetName="Coverage")]
     [ValidateSet("Debug", "Release")]
     [string] $Configuration = "Debug"
+,
+    # Update .NET CLI 'local tool' plugins.
+    [Parameter(Mandatory, ParameterSetName="UpdateLocalTools")]
+    [switch] $UpdateLocalTools
 )
 
 #Requires -Version 5
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
+
+$Command = $PSCmdlet.ParameterSetName
+if ($Command -eq "Test") { $Test = $true }
 
 # http://patorjk.com/software/taag/#p=display&f=Slant
 Write-Host -ForegroundColor Cyan @'
@@ -43,6 +69,11 @@ Write-Host -ForegroundColor Cyan @'
 '@
 
 function Main {
+    if ($UpdateLocalTools) {
+        Update-LocalTools
+        return
+    }
+
     if ($Clean) {
         Invoke-Clean
         return
@@ -51,6 +82,19 @@ function Main {
     if (!$NoBuild) {
         Invoke-Build
     }
+
+    if ($Test -or $Coverage) {
+        Invoke-Test
+    }
+
+    if ($Coverage) {
+        Export-CoverageReport
+    }
+}
+
+function Update-LocalTools {
+    Write-Phase "Update Local Tools"
+    Invoke-DotNet tool update dotnet-reportgenerator-globaltool
 }
 
 function Invoke-Clean {
@@ -66,6 +110,48 @@ function Invoke-Clean {
 function Invoke-Build {
     Write-Phase "Build"
     Invoke-DotNet build --configuration:$Configuration
+}
+
+function Invoke-Test {
+    Write-Phase "Test$(if ($Coverage) {" + Coverage"})"
+    Remove-Item coverage\raw -Recurse -ErrorAction Ignore
+    Invoke-DotNet -Arguments @(
+        "test"
+        "--nologo"
+        "--no-build"
+        "--configuration:$Configuration"
+        if ($Coverage) {
+            "--settings:Coverlet.runsettings"
+            "--results-directory:coverage\raw"
+        }
+    )
+}
+
+function Export-CoverageReport {
+    Write-Phase "Coverage Report"
+    Invoke-DotNet -Arguments "tool", "restore"
+    Invoke-DotNet -Arguments @(
+        "reportgenerator"
+        "-reports:coverage\raw\**\coverage.opencover.xml"
+        "-targetdir:coverage"
+        "-reporttypes:Html;JsonSummary"
+        "-verbosity:Warning"
+    )
+    $Summary = (Get-Content coverage\Summary.json -Raw | ConvertFrom-Json).summary
+    @(
+        ""
+        "Coverage:"
+        "    Methods:  {0,7:F3}%" -f $Summary.methodcoverage
+        "    Lines:    {0,7:F3}%" -f $Summary.linecoverage
+        "    Branches: {0,7:F3}%" -f $Summary.branchcoverage
+        ""
+    ) | Write-Host
+    if ($Summary.methodcoverage + $Summary.linecoverage + $Summary.branchcoverage -lt 300) {
+        Write-Warning "Coverage is below 100%."
+    }
+    if ($Show) {
+        Start-Process (Join-Path $PSScriptRoot coverage index.html)
+    }
 }
 
 function Invoke-DotNet {

@@ -86,19 +86,65 @@ jobs:
           -p:TreatWarningsAsErrors=true
           -p:PackageOutputPath=${{ runner.temp }}/dist/
 
-      - name: Build (SDK 6.0)
+      - name: Build (SDK 6.0 binary)
         run: >
           dotnet build -c Release
           -p:TreatWarningsAsErrors=true
-          -p:PackageOutputPath=${{ runner.temp }}/dist/test/
-        working-directory: test/sdk6.0
+          -p:PackageOutputPath=${{ runner.temp }}/dist/sdk6.0/
+        working-directory: example/sdk6.0-binary
 
-      - name: Build (SDK 8.0)
+      - name: Build (SDK 6.0 script)
         run: >
           dotnet build -c Release
           -p:TreatWarningsAsErrors=true
-          -p:PackageOutputPath=${{ runner.temp }}/dist/test/
-        working-directory: test/sdk8.0
+          -p:PackageOutputPath=${{ runner.temp }}/dist/sdk6.0/
+        working-directory: example/sdk6.0-script
+
+      - name: Build (SDK 8.0 binary)
+        run: >
+          dotnet build -c Release
+          -p:TreatWarningsAsErrors=true
+          -p:PackageOutputPath=${{ runner.temp }}/dist/sdk8.0/
+        working-directory: example/sdk8.0-binary
+
+      - name: Build (SDK 8.0 script)
+        run: >
+          dotnet build -c Release
+          -p:TreatWarningsAsErrors=true
+          -p:PackageOutputPath=${{ runner.temp }}/dist/sdk8.0/
+        working-directory: example/sdk8.0-script
+
+      - name: Test
+        run: >
+          dotnet test --no-build -c Release
+          --settings Coverlet.runsettings
+          --results-directory ${{ runner.temp }}/test/raw
+
+      - name: Prepare Coverage Report
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5
+        #url: https://github.com/danielpalme/ReportGenerator-GitHub-Action
+        with:
+          reports: ${{ runner.temp }}/test/raw/**/coverage.opencover.xml
+          targetdir: ${{ runner.temp }}/test/coverage
+          reporttypes: Html;MarkdownSummaryGithub;Badges
+          verbosity: Warning
+
+      - name: Publish Coverage Summary
+        run: |
+          Add-Content $env:GITHUB_STEP_SUMMARY @(
+            "## Coverage`n"
+            Select-String '^#' $env:REPORT_PATH -NotMatch -Raw
+          )
+        env:
+          REPORT_PATH: ${{ runner.temp }}/test/coverage/SummaryGithub.md
+
+      - name: Save Coverage Report
+        uses: actions/upload-artifact@v5
+        #url: https://github.com/actions/upload-artifact
+        with:
+          name: Coverage Report
+          path: ${{ runner.temp }}/test/coverage
+          if-no-files-found: error
 
       - name: Save Distributables
         uses: actions/upload-artifact@v5

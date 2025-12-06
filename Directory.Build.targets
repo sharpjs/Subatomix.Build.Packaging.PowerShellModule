@@ -26,11 +26,24 @@
                       Version="1.1.0" PrivateAssets="all" />
   </ItemGroup>
 
+  <!-- Visibility -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Subatomix.Build.Packaging.PowerShellModule.Tests" />
+  </ItemGroup>
+
   <!-- Print source paths of packaged files -->
-  <Target Name="PrintPackageFiles" AfterTargets="GenerateNuspec">
-    <Message Importance="high"
-             Text="_PackageFiles: %(_PackageFiles.NuGetRecursiveDir)%(_PackageFiles.Filename)%(_PackageFiles.Extension)" />
-    <!-- NuGetRecursiveDir is a workaround for bug https://github.com/dotnet/msbuild/issues/3121 -->
+  <PropertyGroup>
+    <PackDependsOn>$(PackDependsOn);PrintPackageFiles</PackDependsOn>
+  </PropertyGroup>
+  <Target Name="PrintPackageFiles" Condition="'$(IsPackable)' == 'true'">
+    <ItemGroup>
+      <_BuildOutputInPackage PrettyPath="$(BuildOutputTargetFolder)\%(TargetFramework)\%(TargetPath)" />
+      <_BuildOutputInPackage PrettyPath="$([MSBuild]::NormalizePath('%(PrettyPath)'))" />
+      <_BuildOutputInPackage PrettyPath="$([MSBuild]::MakeRelative('.', '%(PrettyPath)'))" />
+      <_PackageFilesToPrint Include="@(_BuildOutputInPackage->'%(PrettyPath)')" />
+      <_PackageFilesToPrint Include="@(_PackageFiles->'%(RecursiveDir)%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Message Importance="high" Text="Packed: $(PackageId) &lt;- %(_PackageFilesToPrint.Identity)" />
   </Target>
 
 </Project>

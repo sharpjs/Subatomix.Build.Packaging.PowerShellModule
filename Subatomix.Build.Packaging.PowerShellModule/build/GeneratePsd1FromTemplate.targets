@@ -1,0 +1,172 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT
+  -->
+
+  <UsingTask TaskName="Subatomix.Build.Packaging.PowerShellModule.GeneratePsd1FromTemplate"
+             AssemblyFile="Subatomix.Build.Packaging.PowerShellModule.dll"
+             Condition="'$(DesignTimeBuild)' != 'true'" />
+
+  <PropertyGroup>
+    <CoreBuildDependsOn>
+      AssignDefaultPsd1Replacements;
+      GeneratePsd1FromTemplate;
+      $(CoreBuildDependsOn)
+    </CoreBuildDependsOn>
+  </PropertyGroup>
+
+  <!-- Nest generated .psd1 files under their templates -->
+  <ItemGroup>
+    <Content Update="**\*.psd1">
+      <DependentUpon Condition="Exists('%(FullPath).t')">%(Filename)%(Extension).t</DependentUpon>
+    </Content>
+  </ItemGroup>
+
+  <!-- Default preplacements in .psd1.t templates -->
+  <Target Name="AssignDefaultPsd1Replacements" Condition="'$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <!-- Common properties -->
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(AssemblyName)' != ''"
+        Include="AssemblyName" Value="$(AssemblyName)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(AssemblyTitle)' != ''"
+        Include="AssemblyTitle" Value="$(AssemblyTitle)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Configuration)' != ''"
+        Include="Configuration" Value="$(Configuration)" />
+
+      <!-- Version properties -->
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(VersionPrefix)' != ''"
+        Include="VersionPrefix" Value="$(VersionPrefix)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(VersionSuffix)' != ''"
+        Include="VersionSuffix" Value="$(VersionSuffix)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Version)' != ''"
+        Include="Version" Value="$(Version)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(AssemblyVersion)' != ''"
+        Include="AssemblyVersion" Value="$(AssemblyVersion)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(FileVersion)' != ''"
+        Include="FileVersion" Value="$(FileVersion)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(InformationalVersion)' != ''"
+        Include="InformationalVersion" Value="$(InformationalVersion)" />
+
+      <!-- Descriptive properties -->
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Description)' != ''"
+        Include="Description" Value="$(Description)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Title)' != ''"
+        Include="Title" Value="$(Title)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Product)' != ''"
+        Include="Product" Value="$(Product)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Authors)' != ''"
+        Include="Authors" Value="$(Authors)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Company)' != ''"
+        Include="Company" Value="$(Company)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Copyright)' != ''"
+        Include="Copyright" Value="$(Copyright)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(Trademark)' != ''"
+        Include="Trademark" Value="$(Trademark)" />
+
+      <!-- Packaging properties -->
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageId)' != ''"
+        Include="PackageId" Value="$(PackageId)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageVersion)' != ''"
+        Include="PackageVersion" Value="$(PackageVersion)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageProjectUrl)' != ''"
+        Include="PackageProjectUrl" Value="$(PackageProjectUrl)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageLicenseExpression)' != ''"
+        Include="PackageLicenseExpression" Value="$(PackageLicenseExpression)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageLicenseFile)' != ''"
+        Include="PackageLicenseFile" Value="$(PackageLicenseFile)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageIcon)' != ''"
+        Include="PackageIcon" Value="$(PackageIcon)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageIconUrl)' != ''"
+        Include="PackageIconUrl" Value="$(PackageIconUrl)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageReadmeFile)' != ''"
+        Include="PackageReadmeFile" Value="$(PackageReadmeFile)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageReleaseNotes)' != ''"
+        Include="PackageReleaseNotes" Value="$(PackageReleaseNotes)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(PackageTags)' != ''"
+        Include="PackageTags" Value="$(PackageTags)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(RepositoryUrl)' != ''"
+        Include="RepositoryUrl" Value="$(RepositoryUrl)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(RepositoryType)' != ''"
+        Include="RepositoryType" Value="$(RepositoryType)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(RepositoryCommit)' != ''"
+        Include="RepositoryCommit" Value="$(RepositoryCommit)" />
+
+      <!-- Module properties -->
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(ModuleGuid)' != ''"
+        Include="ModuleGuid" Value="$(ModuleGuid)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(ModuleLicenseUrl)' != ''"
+        Include="ModuleLicenseUrl" Value="$(ModuleLicenseUrl)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(ModuleRequireLicenseAcceptance)' != ''"
+        Include="ModuleRequireLicenseAcceptance" Value="$(ModuleRequireLicenseAcceptance)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(MinimumPowerShellVersion)' != ''"
+        Include="MinimumPowerShellVersion" Value="$(MinimumPowerShellVersion)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(RequiredPowerShellHostName)' != ''"
+        Include="RequiredPowerShellHostName" Value="$(RequiredPowerShellHostName)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(MinimumPowerShellHostVersion)' != ''"
+        Include="MinimumPowerShellHostVersion" Value="$(MinimumPowerShellHostVersion)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(MinimumDotNetFrameworkVersion)' != ''"
+        Include="MinimumDotNetFrameworkVersion" Value="$(MinimumDotNetFrameworkVersion)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(MinimumClrVersion)' != ''"
+        Include="MinimumClrVersion" Value="$(MinimumClrVersion)" />
+      <Psd1Replacement
+        Exclude="@(Psd1Replacement)" Condition="'$(RequiredProcessorArchitecture)' != ''"
+        Include="RequiredProcessorArchitecture" Value="$(RequiredProcessorArchitecture)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Generate .psd1 files from the .psd1.t templates -->
+  <Target Name="GeneratePsd1FromTemplate" BeforeTargets="AssignTargetPaths"
+          Condition="'$(DesignTimeBuild)' != 'true'"
+          Inputs="@(Psd1Template)" Outputs="@(Psd1Template->'%(RecursiveDir)%(Filename)')">
+
+    <GeneratePsd1FromTemplate InputFiles="@(Psd1Template)" Replacements="@(Psd1Replacement)" />
+
+    <ItemGroup>
+      <!-- Enlist generated file to be removed on next Clean -->
+      <FileWrites Include="@(Psd1Template->'%(RecursiveDir)%(Filename)')" />
+
+      <!-- Add generated file as a Content item so it gets copied to output -->
+      <Content Include="@(Psd1Template->'%(RecursiveDir)%(Filename)')" Exclude="@(Content)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

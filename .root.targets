@@ -13,18 +13,22 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <IsPublishable>false</IsPublishable>
     <IsPackable>false</IsPackable>
+    <Furby>$(DefaultItemExcludesInProjectFolder)</Furby>
     <DefaultItemExcludesInProjectFolder>
-      src\**;
-      test\**;
+      example\*\bin\**;
+      example\*\obj\**;
+      example\current-*\**;
       dist\**;
+      test\**;
+      Subatomix.Build.Packaging.PowerShellModule*\**;
       $(DefaultItemExcludesInProjectFolder)
     </DefaultItemExcludesInProjectFolder>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="**"      Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
-    <None Include=".*\**"   Exclude=".git\**;.vs\**;.vscode\**" />
-    <None Include="test\**" Exclude="test\current\**" />
+    <None Include="**"    Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);$(MSBuildThisFile)" />
+    <None Include=".*\**" Exclude=".git\**;.vs\**;.vscode\**" />
+    <None Include="example\sdk*\*.csproj" />
   </ItemGroup>
 
 </Project>

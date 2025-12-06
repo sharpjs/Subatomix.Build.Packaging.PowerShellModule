@@ -1,0 +1,151 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT
+  -->
+
+  <!--
+    This package makes 'dotnet pack' and the Pack command in Visual Studio
+    produce a PowerShell module .nupkg suitable for publishing in a module
+    repository.
+
+    Import order:
+    | project -> SDK .targets -> NuGet package .targets -> Directory.Build.targets
+    |                            ^^^^^^^^^here^^^^^^^^^
+
+    REFERENCES
+
+    How to write a PowerShell module manifest
+    https://learn.microsoft.com/en-us/powershell/scripting/developer/module/how-to-write-a-powershell-module-manifest
+
+    Customize your build
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
+
+    MSBuild reserved and well-known properties
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties
+
+    MSBuild well-known item metadata
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata
+
+    Common MSBuild project properties
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
+
+    MSBuild reference for .NET SDK projects
+    https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props
+
+    Set assembly attributes in a project file
+    https://learn.microsoft.com/en-us/dotnet/standard/assembly/set-attributes-project-file
+
+    Item functions
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/item-functions
+
+    NuGet pack and restore as MSBuild targets
+    https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets (specifically, #targetsfortfmspecificcontentinpackage)
+    https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.props
+    https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.PackTool.targets
+
+    Up-to-date check
+    https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md
+    https://github.com/dotnet/project-system/blob/main/src/Microsoft.VisualStudio.ProjectSystem.Managed/ProjectSystem/DesignTimeTargets/Microsoft.Managed.DesignTime.targets
+  -->
+
+  <PropertyGroup>
+    <!--
+      PowerShell module files should appear at the root of the package.
+    -->
+    <BuildOutputTargetFolder>.</BuildOutputTargetFolder>
+    <ContentTargetFolders>.</ContentTargetFolders>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+    <!--
+      .NET 10+ creates runtime-identifier-specific tool packages by default,
+      but PowerShell modules should not be RID-specific.
+      https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/10.0/dotnet-tool-pack-publish
+    -->
+    <CreateRidSpecificToolPackages>false</CreateRidSpecificToolPackages>
+    <UseAppHost>false</UseAppHost>
+
+    <!--
+      PowerShell modules depend on other PowerShell modules, not on typical
+      NuGet packages.  Those module dependencies are specified in .psd1 files
+      (aka module manifests).  Dependency DLLs typically ship with the module.
+      Thus the .nuspec of the module should not declare any NuGet dependencies.
+    -->
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+
+    <!--
+      Turn off warnings complaining that the module is not structured like a
+      typical .NET NuGet package.  They do not apply to PowerShell modules.
+
+      NU5100: The assembly '...' is not inside the 'lib' folder and hence it
+              won't be added as a reference when the package is installed into
+              a project. Move it into the 'lib' folder if it needs to be
+              referenced.
+
+      NU5110: The script file '...' is outside the 'tools' folder and hence
+              will not be executed during installation of this package. Move
+              it into the 'tools' folder.
+
+      NU5111: The script file '...' is not recognized by NuGet and hence will
+              not be executed during installation of this package. Rename it
+              to install.ps1, uninstall.ps1 or init.ps1 and place it directly
+              under 'tools'.
+    -->
+    <NoWarn>$(NoWarn);NU5100;NU5110;NU5111</NoWarn>
+
+    <!--
+      PowerShell modules specify licenses by URL.  PackageLicenseUrl exists but
+      triggers deprecation warnings, so provide a separate property.
+    -->
+    <ModuleLicenseUrl Condition="'$(ModuleLicenseUrl)' == ''">$(PackageLicenseUrl)</ModuleLicenseUrl>
+
+    <!--
+      The PowerShell module require-license-acceptance flag is a PS boolean.
+    -->
+    <ModuleRequireLicenseAcceptance
+      Condition="'$(PackageRequireLicenseAcceptance)' == 'true'"
+      >$true</ModuleRequireLicenseAcceptance>
+    <ModuleRequireLicenseAcceptance
+      Condition="'$(PackageRequireLicenseAcceptance)' != 'true'"
+      >$false</ModuleRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <Content>
+      <!--
+        This package tracks PowerShell files as Content items.  Copy content
+        items to the output directory so that the file layout for IDE run/debug
+        approximates that of the installed module.
+      -->
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemDefinitionGroup>
+
+  <!-- Prevent PowerShell files from being duplicated as None items -->
+  <ItemGroup Condition="'$(EnableDefaultItems)' == 'true' And '$(EnableDefaultNoneItems)' == 'true'">
+    <None Remove="$(PowerShellItemIncludes)"/>
+  </ItemGroup>
+
+  <!-- Trigger rebuild if generated .psd1 files are missing or outdated -->
+  <Target Name="Psd1CollectUpToDateCheckBuiltDesignTime"
+          BeforeTargets="CollectUpToDateCheckBuiltDesignTime" >
+    <ItemGroup>
+      <UpToDateCheckBuilt Include="**\*.psd1">
+        <Original>%(RecursiveDir)%(Filename)%(Extension).t;$(MSBuildProjectFile)</Original>
+      </UpToDateCheckBuilt>
+    </ItemGroup>
+  </Target>
+
+  <!-- Pack DLL in '.' rather than in TFM directory. -->
+  <Target Name="RemoveTfmFromBuildOutputInPackage" AfterTargets="_WalkEachTargetPerFramework">
+    <ItemGroup>
+      <_BuildOutputInPackage TargetPath="..\%(TargetPath)" />
+    </ItemGroup>
+  </Target>
+
+  <Import Project="GeneratePsd1.targets" />
+  <Import Project="GeneratePsd1FromTemplate.targets" />
+
+</Project>

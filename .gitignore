@@ -4,6 +4,7 @@
 # Build products
 obj/
 bin/
+/coverage/
 /dist/
 /Stamp.props
 *.psd1

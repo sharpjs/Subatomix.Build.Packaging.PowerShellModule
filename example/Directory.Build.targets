@@ -1,0 +1,31 @@
+<Project>
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT
+  -->
+
+  <!--
+    * Imported late: project -> SDK .targets -> NuGet package .targets -> this
+    * Override properties and targets here.
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build
+  -->
+
+  <!--
+    The example modules use Subatomix.Build.Packaging.PowerShellModule directly
+    from source rather than via NuGet, so remove the package reference.
+  -->
+  <ItemGroup>
+    <PackageReference Remove="Subatomix.Build.Packaging.PowerShellModule" />
+  </ItemGroup>
+
+  <!--
+    Simulate the Subatomix.ExampleModule project having a reference to the
+    Subatomix.Build.Packaging.PowerShellModule NuGet package
+  -->
+  <Import Project="..\Subatomix.Build.Packaging.PowerShellModule\bin\$(Configuration)\build\Subatomix.Build.Packaging.PowerShellModule.targets" />
+
+  <!-- Inherit from parent directory -->
+  <Import Project="..\Directory.Build.targets" />
+
+</Project>

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Copyright Subatomix Research Inc.
+    SPDX-License-Identifier: MIT
+  -->
+
+  <PropertyGroup>
+    <Description>Tests for Subatomix.Build.Packaging.PowerShellModule</Description>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>14</LangVersion>
+    <RootNamespace>Subatomix.Build.Packaging.PowerShellModule</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Subatomix.Build.Packaging.PowerShellModule\Subatomix.Build.Packaging.PowerShellModule.csproj"
+                      Aliases="Subject" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotStuff" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" />
+    <PackageReference Include="Subatomix.Testing" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.Build.Framework" />
+    <Using Include="Microsoft.Build.Utilities" />
+  </ItemGroup>
+
+</Project>
