@@ -87,7 +87,7 @@ public class GeneratePsd1FromTemplate : Microsoft.Build.Utilities.Task
         var mode = match.Groups["Mode"].Value;
 
         if (!_replacements.TryGetValue(name, out var value))
-            return match.Value; // leave placeholder unchanged
+            return string.Empty;
 
         return mode switch
         {

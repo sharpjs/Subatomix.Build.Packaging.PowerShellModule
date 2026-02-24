@@ -87,7 +87,7 @@ internal class GeneratePsd1FromTemplateTests
                 @({Baz})  is split into an array of strings
                 ' {Qux}'  is replaced verbatim; space prevents recognition of string
                 @( {Xyz}) is replaced verbatim; space prevents recognition of array
-                {Corge}   is not replaced because there is no Corge in Replacements
+                {Corge}   is removed because there is no Corge in Replacements
                 """
             }
         };
@@ -117,7 +117,7 @@ internal class GeneratePsd1FromTemplateTests
             @('e''s', 'f', 'x')  is split into an array of strings
             ' g's h'  is replaced verbatim; space prevents recognition of string
             @( i's j;y) is replaced verbatim; space prevents recognition of array
-            {Corge}   is not replaced because there is no Corge in Replacements
+               is removed because there is no Corge in Replacements
             """
         );
     }
