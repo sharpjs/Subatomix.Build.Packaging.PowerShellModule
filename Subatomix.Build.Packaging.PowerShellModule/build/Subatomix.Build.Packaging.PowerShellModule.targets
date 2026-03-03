@@ -74,6 +74,9 @@
       Thus the .nuspec of the module should not declare any NuGet dependencies.
     -->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <TargetsForTfmSpecificBuildOutput>
+      $(TargetsForTfmSpecificBuildOutput);PackReferences
+    </TargetsForTfmSpecificBuildOutput>
 
     <!--
       Turn off warnings complaining that the module is not structured like a
@@ -135,6 +138,17 @@
       <UpToDateCheckBuilt Include="**\*.psd1">
         <Original>%(RecursiveDir)%(Filename)%(Extension).t;$(MSBuildProjectFile)</Original>
       </UpToDateCheckBuilt>
+    </ItemGroup>
+  </Target>
+
+  <!-- Pack dependency DLLs into the module -->
+  <Target Name="PackReferences" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage
+        Include="@(ReferenceCopyLocalPaths->
+          WithMetadataValue('CopyLocal', 'true')->
+          WithoutMetadataValue('CopyToPublishDirectory', 'false'))"
+        TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)" />
     </ItemGroup>
   </Target>
 
