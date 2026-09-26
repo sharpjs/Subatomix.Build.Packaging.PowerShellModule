@@ -11,9 +11,9 @@ This file documents all notable changes.
   Module projects requiring `false` must now set the property explicitly.
 
 - :warning: **Breaking Change:** `.deps.json` files are no longer packed in
-  PowerShell modules, becuase PowerShell module loading does not use them.  To
-  use them, isolate dependencies in a private load context as described
-  [here](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/resolving-dependency-conflicts).
+  PowerShell modules, because PowerShell module loading does not use
+  `.deps.json` files.  To use them, isolate dependencies in a private load
+  context as described [here](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/resolving-dependency-conflicts).
 
 - Add module manifest generation from project file properties and items.
 - Add many new placeholders for use in `.psd1.t` files.
