@@ -1,9 +1,9 @@
 # Changes in Subatomix.ExampleModule
 This file documents all notable changes.
 
-## [Unreleased](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.2.0..HEAD)
-- :warning: **Breaking Change:** Renamed `Test-PowerShellModulePackaging` command to
-  `Test-ModulePackaging`.
+## [2.0.0](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.2.0..release/2.0.0)
+- :warning: **Breaking Change:** Renamed `Test-PowerShellModulePackaging`
+  command to `Test-ModulePackaging`.
 
 ## [1.2.0](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.1.1..release/1.2.0)
 - Changed license to MIT No Attribution (MIT-0)

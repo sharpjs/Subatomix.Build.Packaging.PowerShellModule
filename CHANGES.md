@@ -1,7 +1,7 @@
 # Changes in Subatomix.Build.Packaging.PowerShellModule
 This file documents all notable changes.
 
-## [Unreleased](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.2.0..HEAD)
+## [2.0.0](https://github.com/sharpjs/Subatomix.Build.Packaging.PowerShellModule/compare/release/1.2.0..release/2.0.0)
 - :warning: **Breaking Change:** This package now includes PowerShell files
   as `Content` items by default.  Project files should remove the XML fragment
   mentioned in the [1.1.0](#110) release note if previously added.
