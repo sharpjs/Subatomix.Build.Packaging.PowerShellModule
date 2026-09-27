@@ -8,14 +8,14 @@
 
   <PropertyGroup>
     <Description>Example script module built with Subatomix.Build.Packaging.PowerShellModule</Description>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
                       Version="..." PrivateAssets="all" />
     <PackageReference Include="System.Management.Automation"
-                      Version="7.4.0" PrivateAssets="all" />
+                      Version="7.6.0" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Properties for module manifest generation -->
@@ -36,7 +36,7 @@
       <PackageTags>...</PackageTags>
     -->
     <ModuleGuid>c434a3cb-40d3-43c6-812d-7747a373ba37</ModuleGuid>
-    <MinimumPowerShellVersion>7.4</MinimumPowerShellVersion>
+    <MinimumPowerShellVersion>7.6</MinimumPowerShellVersion>
     <PackageTags>PowerShell Module Examples</PackageTags>
   </PropertyGroup>
 

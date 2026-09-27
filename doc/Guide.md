@@ -5,8 +5,8 @@
 In the project file, set the target framework to the .NET version that
 [corresponds to](https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-support-lifecycle)
 the minimum PowerShell version the module will support.  For example, if the
-module will support PowerShell 7.4 or later, set the target framework to .NET
-8.0 (`net8.0`).
+module will support PowerShell 7.6 or later, set the target framework to .NET
+10.0 (`net10.0`).
 
 Then, add NuGet package references to:
 - [Subatomix.Build.Packaging.PowerShellModule](https://www.nuget.org/packages/Subatomix.Build.Packaging.PowerShellModule)
@@ -14,18 +14,18 @@ Then, add NuGet package references to:
 - [System.Management.Automation](https://www.nuget.org/packages/System.Management.Automation),
   matching the minimum PowerShell version the module supports.
 
-Here is a minimal `.csproj` file targeting PowerShell 7.4 or later:
+Here is a minimal `.csproj` file targeting PowerShell 7.6 or later:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Management.Automation"
-                      Version="7.4.0" PrivateAssets="All" />
+                      Version="7.6.0" PrivateAssets="All" />
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
                       Version="2.0.0" PrivateAssets="All" />
   </ItemGroup>
@@ -117,7 +117,7 @@ For example:
     <Copyright>© 2026 My Company</Copyright>
 
     <ModuleGuid>...your GUID here...</ModuleGuid>
-    <MinimumPowerShellVersion>7.4</MinimumPowerShellVersion>
+    <MinimumPowerShellVersion>7.6</MinimumPowerShellVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -26,18 +26,18 @@ PowerShell module ready for publishing to the [PowerShell Gallery][psg].
 
 See the [usage guide][ug] for full details.
 
-A C# project file targeting PowerShell 7.4 or later might look like this:
+A C# project file targeting PowerShell 7.6 or later might look like this:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Management.Automation"
-                      Version="7.4.0" PrivateAssets="All" />
+                      Version="7.6.0" PrivateAssets="All" />
     <PackageReference Include="Subatomix.Build.Packaging.PowerShellModule"
                       Version="2.0.0" PrivateAssets="All" />
   </ItemGroup>
