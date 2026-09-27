@@ -23,6 +23,7 @@ on:
     # no options
 
 permissions:
+  id-token: write # required by NuGet/login@v1
   contents: write # required by ncipollo/release-action@v1
 
 env:
